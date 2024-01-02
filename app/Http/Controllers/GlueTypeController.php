@@ -61,7 +61,7 @@ class GlueTypeController extends Controller
             
             $glue = GlueType::find($id);
             $glue -> brand_id = $request -> id;
-            $glue -> type = $request -> glue_type;
+            $glue -> type = $request -> type;
             $glue ->  brand = $request -> brand;
             $glue->save();
 

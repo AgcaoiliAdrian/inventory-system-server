@@ -41,6 +41,6 @@ class Product extends Model
     }
 
     public function variant(){
-        return $this->belongsTo(Variant::class, 'varian_id');
+        return $this->belongsTo(Variant::class, 'variant_id');
     }
 }

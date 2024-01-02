@@ -39,14 +39,14 @@ class ProductController extends Controller
             $brand = Brand::findOrFail($validatedData['brand_id']);
             $glue = GlueType::findOrFail($validatedData['glue_type_id']);
             $thickness = Thickness::findOrFail($validatedData['thickness_id']);
-            $variant = Variant::findOrFail($validatedData['variant_id']);
+            $variant = $validatedData['variant_id'] ? Variant::findOrFail($validatedData['variant_id']) : null;
 
     
             $product = Product::create([
                 'brand_id' => $brand->id,
                 'thickness_id' => $thickness->id,
                 'glue_type_id' => $glue->id,
-                'variant_id' => $variant->id,
+                'variant_id' => $variant ? $variant->id : null,
                 'manufacturing_date' => $request->manufacturing_date,
                 'description' => $request->description,
                 'price' => $request->price,
@@ -64,7 +64,13 @@ class ProductController extends Controller
     public function show($id, Request $request){
         try {
             
-            $product  = Product::findorFail($id);
+            $product  = Product::with('brand', 'glue', 'thickness')->find($id);
+
+            if (!$product) {
+                return response()->json([
+                    'message' => 'Product not found'
+                ], 404);
+            }
 
             return response()->json($product);
 

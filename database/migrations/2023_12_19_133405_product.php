@@ -18,7 +18,7 @@ class Product extends Migration
             $table->unsignedInteger('brand_id');
             $table->unsignedInteger('glue_type_id');
             $table->unsignedInteger('thickness_id');
-            $table->unsignedInteger('variant_id');
+            $table->unsignedInteger('variant_id')->nullable();
             $table->date('manufacturing_date')->nullable();
             $table->string('description')->nullable();
             $table->double('price');
