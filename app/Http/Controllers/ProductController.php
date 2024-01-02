@@ -60,6 +60,20 @@ class ProductController extends Controller
             return response()->json(['message' => $th->getMessage()]);
         }
     }    
+
+    public function show($id, Request $request){
+        try {
+            
+            $product  = Product::findorFail($id);
+
+            return response()->json($product);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th -> getMessage()
+            ]);
+        }
+    }
     
     public function update(Request $request, $id){
     
