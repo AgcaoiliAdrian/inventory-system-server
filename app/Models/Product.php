@@ -21,7 +21,6 @@ class Product extends Model
         'glue_type_id',
         'thickness_id',
         'variant_id',
-        'manufacturing_date',
         'description',
         'price'
     ];

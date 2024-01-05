@@ -47,7 +47,6 @@ class ProductController extends Controller
                 'thickness_id' => $thickness->id,
                 'glue_type_id' => $glue->id,
                 'variant_id' => $variant ? $variant->id : null,
-                'manufacturing_date' => $request->manufacturing_date,
                 'description' => $request->description,
                 'price' => $request->price,
             ]);
@@ -64,7 +63,7 @@ class ProductController extends Controller
     public function show($id, Request $request){
         try {
             
-            $product  = Product::with('brand', 'glue', 'thickness')->find($id);
+            $product  = Brand::with('variant', 'grade', 'glue', 'thickness')->find($id);
 
             if (!$product) {
                 return response()->json([

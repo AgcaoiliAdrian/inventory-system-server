@@ -48,7 +48,7 @@ class BrandController extends Controller
                 'message' => $th->getMessage()
             ]);
         }
-    }    
+    }
 
     public function update($id, Request $request){
         try {

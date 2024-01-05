@@ -17,8 +17,9 @@ class PanelStock extends Migration
             $table->increments('id');
             $table->unsignedInteger('product_id');
             $table->unsignedInteger('grade_id');
-            $table->unsignedInteger('barcode_id');
+            $table->unsignedInteger('barcode_id')->nullable();
             $table->integer('quantity');
+            $table->date('manufacturing_date');
             $table->integer('is_batch');
             
             $table->timestamps();

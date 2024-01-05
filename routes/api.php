@@ -30,14 +30,23 @@ use Illuminate\Support\Facades\Route;
         Route::post('/glue', 'GlueTypeController@store');
         Route::put('/glue/{id}', 'GlueTypeController@update');
 
-        //Thickness End Point
+        //Thickness Endpoint
         Route::get('/thickness', 'ThicknessController@index');
         Route::post('/thickness', 'ThicknessController@store');
         Route::put('/thickness/{id}', 'ThicknessController@update');
+
+        //Grade Endpoint
+        Route::get('/grade', 'GradeController@index');
+        Route::post('/grade', 'GradeController@store');
+        Route::put('/grade/{id}', 'GradeController@update');
 
         //Product Endpoint
         Route::get('/product', 'ProductController@index');
         Route::get('/product/{id}', 'ProductController@show');
         Route::post('/product', 'ProductController@store');
         Route::put('/product/{id}', 'ProductController@update');
+
+        //Panel Endpoint
+        Route::get('/panel/{id}', 'StockInController@show');
+        Route::post('/panel', 'StockInController@store');
     });

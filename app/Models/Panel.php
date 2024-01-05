@@ -14,7 +14,11 @@ class Panel extends Model
     public $fillable = [
         'product_id',
         'grade_id',
+        'barcode_id',
+        'manufacturing_date',
         'quantity',
         'is_batch',
     ];
+
+    public $timestamps = TRUE;
 }

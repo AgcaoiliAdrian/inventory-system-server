@@ -29,6 +29,6 @@ class Grade extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('grade');
     }
 }
