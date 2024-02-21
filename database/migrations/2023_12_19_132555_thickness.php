@@ -15,7 +15,7 @@ class Thickness extends Migration
     {
         Schema::create('thickness', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('brand_id');
+            // $table->unsignedInteger('brand_id');
             $table->string('value');
             $table->string('unit');
             

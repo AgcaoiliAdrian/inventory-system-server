@@ -49,4 +49,7 @@ use Illuminate\Support\Facades\Route;
         //Panel Endpoint
         Route::get('/panel/{id}', 'StockInController@show');
         Route::post('/panel', 'StockInController@store');
+
+        //Generate Sticker
+        Route::post('/generate', 'GenerateStickerController@generate');
     });

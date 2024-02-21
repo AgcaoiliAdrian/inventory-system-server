@@ -4,19 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Brand;
 
-class Thickness extends Model
+class Barcode extends Model
 {
     use HasFactory;
 
-    protected $table = 'thickness';
+    protected $table = 'barcode';
 
     public $fillable = [
-        // 'brand_id',
-        'value',
-        'unit'
+        'barcode_details_id',
+        'barcode_number'
     ];
-
     public $timestamps = TRUE;
 }

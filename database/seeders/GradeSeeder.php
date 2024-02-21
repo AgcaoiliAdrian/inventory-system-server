@@ -18,56 +18,56 @@ class GradeSeeder extends Seeder
         Grade::truncate();
 
         Grade::create([
-            'brand_id' => 1,
+            // 'brand_id' => 1,
             'grading' => 'SR',
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
         Grade::create([
-            'brand_id' => 1,
+            // 'brand_id' => 1,
             'grading' => 'EE',
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
         Grade::create([
-            'brand_id' => 2,
+            // 'brand_id' => 2,
             'grading' => 'Local C',
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
         Grade::create([
-            'brand_id' => 2,
+            // 'brand_id' => 2,
             'grading' => 'Local D',
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
         Grade::create([
-            'brand_id' => 2,
+            // 'brand_id' => 2,
             'grading' => 'PZS',
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
         Grade::create([
-            'brand_id' => 2,
+            // 'brand_id' => 2,
             'grading' => 'PTR',
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
         Grade::create([
-            'brand_id' => 3,
+            // 'brand_id' => 3,
             'grading' => 'Local C',
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
         Grade::create([
-            'brand_id' => 3,
+            // 'brand_id' => 3,
             'grading' => 'Local D',
             'created_at' => now(),
             'updated_at' => now()

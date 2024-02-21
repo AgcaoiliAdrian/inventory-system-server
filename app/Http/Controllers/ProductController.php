@@ -29,21 +29,21 @@ class ProductController extends Controller
             'manufacturing_date' => 'nullable|string',
             'description' => 'nullable|string',
             'price' => 'required|integer',
-            'brand_id' => 'required',
+            // 'brand_id' => 'required',
             'glue_type_id' => 'required',
             'thickness_id' => 'required',
             'variant_id' => 'nullable'
         ]);
     
         try {
-            $brand = Brand::findOrFail($validatedData['brand_id']);
+            // $brand = Brand::findOrFail($validatedData['brand_id']);
             $glue = GlueType::findOrFail($validatedData['glue_type_id']);
             $thickness = Thickness::findOrFail($validatedData['thickness_id']);
             $variant = $validatedData['variant_id'] ? Variant::findOrFail($validatedData['variant_id']) : null;
 
     
             $product = Product::create([
-                'brand_id' => $brand->id,
+                // 'brand_id' => $brand->id,
                 'thickness_id' => $thickness->id,
                 'glue_type_id' => $glue->id,
                 'variant_id' => $variant ? $variant->id : null,
@@ -87,7 +87,7 @@ class ProductController extends Controller
 
             if ($product) {
                 $product->update([
-                    'brand_id' => $request->id,
+                    // 'brand_id' => $request->id,
                     'glue_type_id' => $request->id,
                     'thickness_id' => $request->id,
                     'variant_id' => $request->id,

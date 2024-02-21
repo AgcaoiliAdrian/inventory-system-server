@@ -56,7 +56,7 @@ class GradeController extends Controller
     public function update($id, Request $request){
         try {
             $grade = Grade::find($id);
-            $grade -> brand_id = $request -> id;
+            // $grade -> brand_id = $request -> id;
             $grade -> grading = $request -> grade;
             $grade -> updated_at = now();
             $grade -> save();

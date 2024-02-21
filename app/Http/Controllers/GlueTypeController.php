@@ -60,13 +60,14 @@ class GlueTypeController extends Controller
         try {
             
             $glue = GlueType::find($id);
-            $glue -> brand_id = $request -> id;
+            // $glue -> brand_id = $request -> id;
             $glue -> type = $request -> type;
             $glue ->  brand = $request -> brand;
             $glue->save();
 
             return response()->json([
-                'message' => 'Success'
+                'message' => 'Success',
+                'data' => $glue
             ]);
 
         } catch (\Throwable $th) {

@@ -12,7 +12,7 @@ class Grade extends Model
     protected $table = 'grade';
 
     public $fillable = [
-        'brand_id',
+        // 'brand_id',
         'grading',
     ];
     public $timestamps = TRUE;

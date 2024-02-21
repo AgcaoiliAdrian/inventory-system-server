@@ -15,7 +15,7 @@ class GlueType extends Migration
     {
         Schema::create('glue_type', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('brand_id');
+            // $table->unsignedInteger('brand_id');
             $table->string('type');
             $table->string('brand');
             

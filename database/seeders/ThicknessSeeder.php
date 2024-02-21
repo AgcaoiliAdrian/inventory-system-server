@@ -18,7 +18,7 @@ class ThicknessSeeder extends Seeder
         Thickness::truncate();
 
         Thickness::create([
-            'brand_id' => 1,
+            // 'brand_id' => 1,
             'value' => '5.0',
             'unit' => 'mm',
             'created_at' => now(),
@@ -26,7 +26,7 @@ class ThicknessSeeder extends Seeder
         ]);
 
         Thickness::create([
-            'brand_id' => 1,
+            // 'brand_id' => 1,
             'value' => '9.0',
             'unit' => 'mm',
             'created_at' => now(),
@@ -34,7 +34,7 @@ class ThicknessSeeder extends Seeder
         ]);
 
         Thickness::create([
-            'brand_id' => 1,
+            // 'brand_id' => 1,
             'value' => '11.0',
             'unit' => 'mm',
             'created_at' => now(),
@@ -42,7 +42,7 @@ class ThicknessSeeder extends Seeder
         ]);
 
         Thickness::create([
-            'brand_id' => 1,
+            // 'brand_id' => 1,
             'value' => '18.0',
             'unit' => 'mm',
             'created_at' => now(),
@@ -50,7 +50,7 @@ class ThicknessSeeder extends Seeder
         ]);
 
         Thickness::create([
-            'brand_id' => 2,
+            // 'brand_id' => 2,
             'value' => '4.0',
             'unit' => 'mm',
             'created_at' => now(),
@@ -58,7 +58,7 @@ class ThicknessSeeder extends Seeder
         ]);
 
         Thickness::create([
-            'brand_id' => 2,
+            // 'brand_id' => 2,
             'value' => '4.5',
             'unit' => 'mm',
             'created_at' => now(),
@@ -66,7 +66,7 @@ class ThicknessSeeder extends Seeder
         ]);
 
         Thickness::create([
-            'brand_id' => 2,
+            // 'brand_id' => 2,
             'value' => '5.0',
             'unit' => 'mm',
             'created_at' => now(),
@@ -74,7 +74,7 @@ class ThicknessSeeder extends Seeder
         ]);
 
         Thickness::create([
-            'brand_id' => 2,
+            // 'brand_id' => 2,
             'value' => '9.0',
             'unit' => 'mm',
             'created_at' => now(),
@@ -82,7 +82,7 @@ class ThicknessSeeder extends Seeder
         ]);
 
         Thickness::create([
-            'brand_id' => 2,
+            // 'brand_id' => 2,
             'value' => '10.0',
             'unit' => 'mm',
             'created_at' => now(),
@@ -90,7 +90,7 @@ class ThicknessSeeder extends Seeder
         ]);
         
         Thickness::create([
-            'brand_id' => 2,
+            // 'brand_id' => 2,
             'value' => '11.0',
             'unit' => 'mm',
             'created_at' => now(),
@@ -98,7 +98,7 @@ class ThicknessSeeder extends Seeder
         ]);
 
         Thickness::create([
-            'brand_id' => 2,
+            // 'brand_id' => 2,
             'value' => '18.0',
             'unit' => 'mm',
             'created_at' => now(),
@@ -106,7 +106,7 @@ class ThicknessSeeder extends Seeder
         ]);
 
         Thickness::create([
-            'brand_id' => 3,
+            // 'brand_id' => 3,
             'value' => '5.0',
             'unit' => 'mm',
             'created_at' => now(),
@@ -114,7 +114,7 @@ class ThicknessSeeder extends Seeder
         ]);
 
         Thickness::create([
-            'brand_id' => 3,
+            // 'brand_id' => 3,
             'value' => '10.0',
             'unit' => 'mm',
             'created_at' => now(),
@@ -122,7 +122,7 @@ class ThicknessSeeder extends Seeder
         ]);
 
         Thickness::create([
-            'brand_id' => 3,
+            // 'brand_id' => 3,
             'value' => '18.0',
             'unit' => 'mm',
             'created_at' => now(),

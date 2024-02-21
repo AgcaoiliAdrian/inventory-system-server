@@ -41,7 +41,8 @@ class BrandController extends Controller
             }
     
             return response()->json([
-                'message' => 'Brand and variants successfully added.'
+                'message' => 'Brand and variants successfully added.',
+                'data' => $brand
             ]);
         } catch (\Throwable $th) {
             return response()->json([
@@ -58,7 +59,8 @@ class BrandController extends Controller
             $brand -> save();
 
             return response()->json([
-                'message' => 'Success'
+                'message' => 'Success',
+                'data' => $data
             ]);
 
         } catch (\Throwable $th) {

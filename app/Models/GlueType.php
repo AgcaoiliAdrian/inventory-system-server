@@ -13,7 +13,7 @@ class GlueType extends Model
     protected $table = 'glue_type';
 
     public $fillable = [
-        'brand_id',
+        // 'brand_id',
         'type',
         'brand'
     ];

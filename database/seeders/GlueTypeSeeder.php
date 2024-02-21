@@ -18,7 +18,7 @@ class GlueTypeSeeder extends Seeder
         GlueType::truncate();
 
         GlueType::create([
-            'brand_id' => 1,
+            // 'brand_id' => 1,
             'type' => 'I',
             'brand' => 'Phenores',
             'created_at' => now(),
@@ -26,7 +26,7 @@ class GlueTypeSeeder extends Seeder
         ]);
 
         GlueType::create([
-            'brand_id' => 2,
+            // 'brand_id' => 2,
             'type' => 'I',
             'brand' => 'Bondtite 242',
             'created_at' => now(),
@@ -34,7 +34,7 @@ class GlueTypeSeeder extends Seeder
         ]);
 
         GlueType::create([
-            'brand_id' => 2,
+            // 'brand_id' => 2,
             'type' => 'II',
             'brand' => 'Ures LOFO',
             'created_at' => now(),
@@ -42,7 +42,7 @@ class GlueTypeSeeder extends Seeder
         ]);
 
         GlueType::create([
-            'brand_id' => 3,
+            // 'brand_id' => 3,
             'type' => 'I',
             'brand' => 'Bondite 242',
             'created_at' => now(),

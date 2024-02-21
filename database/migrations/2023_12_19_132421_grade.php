@@ -15,7 +15,7 @@ class Grade extends Migration
     {
         Schema::create('grade', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('brand_id');
+            // $table->unsignedInteger('brand_id');
             $table->string('grading');
             
             $table->timestamps();
