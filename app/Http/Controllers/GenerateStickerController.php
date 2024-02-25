@@ -16,11 +16,9 @@ class GenerateStickerController extends Controller
         
         $barcode_number = '2023-01-0005';
 
-        $details = BarcodeDetails::create([
-            'brand_id' => $request->brand_id,
-            'variant_id' => $request->variant_id,
-            'barcode_number' => $barcode_number
-        ]);
+        for($i = 1; $i <= 10; $i++ ){
+            $details = $this->createBarcodeDetails($request, $barcode_number);
+        }
     
         // Get the image filename from the request
         $imageFilename = $request->input('brand');
@@ -35,7 +33,7 @@ class GenerateStickerController extends Controller
     
         // Generate barcode
         $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-        $barcodeImage = $generator->getBarcode($details, $generator::TYPE_CODE_128, 5, 600);
+        $barcodeImage = $generator->getBarcode($details, $generator::TYPE_CODE_128, 18, 600);
     
         // Load existing image
         $existingImage = imagecreatefromjpeg($existingImagePath);
@@ -44,7 +42,7 @@ class GenerateStickerController extends Controller
         $barcodeImageResource = imagecreatefromstring($barcodeImage);
     
         // Get dimensions
-        $barcodeWidth = imagesx($barcodeImageResource);
+        $barcodeWidth = 2500;
         $barcodeHeight = imagesy($barcodeImageResource);
     
         // Calculate position to attach barcode
@@ -90,5 +88,14 @@ class GenerateStickerController extends Controller
     
         // Return success message
         return "Barcode and Word document with images generated successfully.";
-    }    
+    }
+
+    private function createBarcodeDetails(Request $request, $barcode_number)
+    {
+        return BarcodeDetails::create([
+            'brand_id' => $request->brand_id,
+            'variant_id' => $request->variant_id,
+            'barcode_number' => $barcode_number
+        ]);
+    }
 }

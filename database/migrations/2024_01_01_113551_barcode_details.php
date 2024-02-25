@@ -16,10 +16,9 @@ class BarcodeDetails extends Migration
         Schema::create('barcode_details', function (Blueprint $table){
             $table->increments('id');
             $table->unsignedInteger('brand_id');
-            $table->unsignedInteger('variant_id');
-            $table->unsignedInteger('glue_type_id');
-            $table->unsignedInteger('thickness_id');
-            $table->unsignedInteger('grade_id');
+            $table->unsignedInteger('variant_id')->nullable();
+            $table->unsignedInteger('glue_type_id')->nullable();
+            $table->unsignedInteger('thickness_id')->nullable();
             $table->string('barcode_number');
 
             $table->timestamps();

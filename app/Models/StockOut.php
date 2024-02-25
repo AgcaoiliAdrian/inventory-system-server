@@ -5,18 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BarcodeDetails extends Model
+class StockOut extends Model
 {
     use HasFactory;
 
-    protected $table = 'barcode_details';
+    protected $table = 'stock_out';
 
     public $fillable = [
-        'brand_id',
-        'variant_id',
-        'glue_type_id',
-        'thickness_id',
-        'barcode_number'
+        'panel_stock_id',
+        'crate_stock_id',
+        'stock_out_date'
     ];
+
     public $timestamps = TRUE;
 }

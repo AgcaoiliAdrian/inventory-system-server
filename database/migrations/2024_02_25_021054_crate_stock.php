@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class PanelStock extends Migration
+class CrateStock extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,11 @@ class PanelStock extends Migration
      */
     public function up()
     {
-        Schema::create('panel_stock', function (Blueprint $table) {
+        Schema::create('crate_stock', function (Blueprint $table){
             $table->increments('id');
-            $table->unsignedInteger('barcode_id')->nullable();
-            $table->unsignedInteger('grade_id');
-            $table->integer('quantity');
-            $table->date('manufacturing_date');
-            $table->integer('is_batch');
-            
+            $table->unsignedInteger('panel_stock_id');
+            $table->string('batch_number')->nullable();
+
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ class PanelStock extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('panel_stock');
+        Schema::dropIfExists('crate_stock');
     }
 }
