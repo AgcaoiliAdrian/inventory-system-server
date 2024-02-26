@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\BarcodeDetails;
+use App\Helpers\Helpers;
 
 use Illuminate\Http\Request;
 
@@ -13,10 +14,16 @@ class GenerateStickerController extends Controller
         $request->validate([
             'brand' => 'required|string',
         ]);
+
+        $brandId = $request->brand_id;
         
-        $barcode_number = '2023-01-0005';
+        // $barcode_number = Helpers::generateBarcodeNumber();
 
         for($i = 1; $i <= 10; $i++ ){
+            // Generate a new barcode number for each iteration
+            $barcode_number = Helpers::generateBarcodeNumber($brandId);
+            
+            // Create barcode details with the generated barcode number
             $details = $this->createBarcodeDetails($request, $barcode_number);
         }
     

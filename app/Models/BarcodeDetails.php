@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Panel;
 
 class BarcodeDetails extends Model
 {
@@ -19,4 +20,10 @@ class BarcodeDetails extends Model
         'barcode_number'
     ];
     public $timestamps = TRUE;
+
+    public function panels()
+    {
+        return $this->hasMany(Panel::class, 'barcode_id');
+    }
+
 }

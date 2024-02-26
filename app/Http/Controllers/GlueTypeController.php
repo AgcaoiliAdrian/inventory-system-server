@@ -27,14 +27,10 @@ class GlueTypeController extends Controller
         $validatedData = $request->validate([
             'type' => 'required|string',
             'brand' => 'required|string',
-            'brand_id' => 'required',
         ]);
-
-        $brand = Brand::findOrFail($validatedData['brand_id']);
 
         try {
             $glue = GlueType::firstOrCreate([
-                'brand_id' => $brand -> id,
                 'type' => $validatedData['type'],
                 'brand' => $validatedData['brand']
             ]);

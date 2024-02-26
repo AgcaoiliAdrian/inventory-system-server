@@ -8,21 +8,42 @@ use App\Models\Brand;
 use App\Models\GlueType;
 use App\Models\Thickness;
 use App\Models\Variant;
+use App\Models\Panel;
+use App\Models\BarcodeDetails;
 
 class ProductController extends Controller
 {
     public function index(){
         try {
-            $product = Product::with('brand', 'glue', 'thickness')->get();
+            $products = Product::with('brand', 'glue', 'thickness', 'variant')->get();
+    
+            $products->each(function ($product) {
+                $totalQuantity = 0;
 
-            return response()->json($product);
+                // Retrieve all BarcodeDetails for the product
+                $barcodeDetails = BarcodeDetails::where([
+                    'brand_id' => $product->brand_id,
+                    'variant_id' => $product->variant_id,
+                    'glue_type_id' => $product->glue_type_id,
+                    'thickness_id' => $product->thickness_id,
+                ])->get();
 
+                // Sum up quantities from panel_stock for each BarcodeDetails
+                foreach ($barcodeDetails as $barcodeDetail) {
+                    $totalQuantity += Panel::where('barcode_id', $barcodeDetail->id)->sum('quantity');
+                }
+
+                $product->stocks = $totalQuantity;
+            });
+    
+            return response()->json($products);
+    
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => $th->getMessage()
             ]);
         }
-    }
+    }   
 
     public function store(Request $request){
         $validatedData = $request->validate([

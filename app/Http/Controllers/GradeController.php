@@ -24,34 +24,31 @@ class GradeController extends Controller
     public function store(Request $request){
         $validatedData = $request->validate([
             'grading' => 'required|string',
-            'brand_id' => 'required',
         ]);
-
-        $brand = Brand::findOrFail($validatedData['brand_id']);
-
+    
         try {
-            $grade = Grade::create([
-                'brand_id' => $brand -> id,
-                'grading' => $validatedData['grading']
-            ]);
-
-            if ($grade->wasRecentlyCreated) {
-                return response()->json([
-                    'message' => 'Grade successfully added.'
-                ]);
-
-            } else {
+            $existingGrade = Grade::where('grading', $validatedData['grading'])->first();
+    
+            if ($existingGrade) {
                 return response()->json([
                     'message' => 'Grade already exists.'
                 ]);
             }
-
+    
+            $grade = Grade::create([
+                'grading' => $validatedData['grading']
+            ]);
+    
+            return response()->json([
+                'message' => 'Grade successfully added.'
+            ]);
+    
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => $th -> getMessage()
+                'message' => $th->getMessage()
             ]);
         }
-    }
+    }       
 
     public function update($id, Request $request){
         try {

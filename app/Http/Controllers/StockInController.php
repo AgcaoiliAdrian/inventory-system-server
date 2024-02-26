@@ -8,7 +8,7 @@ use App\Models\Brand;
 use App\Models\Panel;
 use App\Models\BarcodeDetails;
 use App\Models\CrateStock;
-use Illuminate\Support\Str;
+use App\Helpers\Helpers;
 
 class StockInController extends Controller
 {
@@ -34,14 +34,14 @@ class StockInController extends Controller
                 'thickness_id' => $request->thickness_id,
             ]);
             
-            if ($request->encoding_type === 0) {
+            if ($request->encoding_type === 0 || $request->encoding_type === 1) {
                 // Check if there's already a panel entry for this barcode
                 $existingPanel = Panel::where('barcode_id', $barcode->id)->first();
     
                 // If there's an existing panel, return an error response
                 if ($existingPanel) {
                     return response()->json([
-                        'message' => 'Individual encoding type allows only one insertion.'
+                        'message' => 'Double entry is not allowed'
                     ], 400);
                 }
             }
@@ -52,22 +52,28 @@ class StockInController extends Controller
             $panel_stock -> manufacturing_date = Carbon::now();
             $panel_stock -> quantity = 1;
             $panel_stock -> is_batch = $request -> encoding_type;
+            // $panel_stock -> status = $request -> status;
             $panel_stock -> save();
-
-            if($request -> encoding_type === 1){
-                $batch_number = Str::random(8); //Helper to be coded for generating Batch Number
-                $crate_stock = new CrateStock();
-                $crate_stock -> panel_stock_id = $panel_stock -> id;
-                $crate_stock -> batch_number = $batch_number;
-                $crate_stock -> save();
+    
+            if ($request->encoding_type === 1) {
+                // Generate batch number using the helper function and pass the encoding type
+                $batch_number = Helpers::generateBatchNumber($request->encoding_type);
+            } else {
+                // Generate batch number using the helper function and pass the encoding type
+                $batch_number = Helpers::generateBatchNumber($request->encoding_type);
             }
+
+            $crate_stock = new CrateStock();
+            $crate_stock->panel_stock_id = $panel_stock->id;
+            $crate_stock->batch_number = $batch_number;
+            $crate_stock->save();                     
     
             return response('Success');
-
+    
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => $th->getMessage()
             ], 500);
         }
-    }    
+    }        
 }

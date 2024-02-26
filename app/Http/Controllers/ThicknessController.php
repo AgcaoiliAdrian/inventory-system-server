@@ -26,14 +26,10 @@ class ThicknessController extends Controller
         $validatedData = $request->validate([
             'value' => 'required|string',
             'unit' => 'required|string',
-            // 'brand_id' => 'required'
         ]);
-
-        // $brand = Brand::findOrFail($validatedData['brand_id']);
 
         try {
             $thickness = Thickness::firstOrCreate([
-                // 'brand_id' => $brand -> id,
                 'value' => $validatedData['value'],
                 'unit' => $validatedData['unit']
             ]);
@@ -59,7 +55,6 @@ class ThicknessController extends Controller
         try {
             
             $thickness = Thickness::find($id);
-            // $thickness -> brand_id = $request -> id;
             $thickness -> value = $request -> value;
             $thickness -> unit = $request -> unit;
             $thickness -> save();
