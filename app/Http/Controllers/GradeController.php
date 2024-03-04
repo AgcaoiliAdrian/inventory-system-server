@@ -64,4 +64,17 @@ class GradeController extends Controller
             ]);
         }
     }
+
+    public function show($id){
+        try {
+            $grade = Grade::find($id);
+
+            return response()->json($grade);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th -> getMessage()
+            ]);
+        }
+    }   
 }
