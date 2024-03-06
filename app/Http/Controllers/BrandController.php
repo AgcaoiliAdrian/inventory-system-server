@@ -69,5 +69,17 @@ class BrandController extends Controller
             ]);
         }
     }
-    
+
+    public function show($id){
+        try {
+            $brand = Brand::with('variant')->find($id);
+            
+            return response()->json($brand);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th -> getMessage()
+            ]);
+        }
+    }   
 }

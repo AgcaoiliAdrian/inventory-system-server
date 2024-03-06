@@ -72,4 +72,17 @@ class GlueTypeController extends Controller
             ]);
         }
     }
+
+    public function show($id){
+        try {
+            $glue = GlueType::find($id);
+
+            return response()->json($glue);
+            
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th -> getMessage()
+            ]);
+        }
+    }
 }

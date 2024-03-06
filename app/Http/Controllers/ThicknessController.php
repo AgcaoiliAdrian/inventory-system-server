@@ -69,4 +69,17 @@ class ThicknessController extends Controller
             ]);
         }
     }
+
+    public function show($id){
+        try {
+            $thickness = Thickness::find($id);
+
+            return response()->json($thickness);
+            
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th -> getMessage()
+            ]);
+        }
+    }
 }

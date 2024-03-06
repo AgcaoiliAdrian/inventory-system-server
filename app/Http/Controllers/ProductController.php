@@ -83,23 +83,22 @@ class ProductController extends Controller
 
     public function show($id, Request $request){
         try {
-            
-            $product  = Brand::with('variant', 'grade', 'glue', 'thickness')->find($id);
-
+            $product = Product::with('brand', 'variant', 'glue', 'thickness')->find($id);
+    
             if (!$product) {
                 return response()->json([
                     'message' => 'Product not found'
                 ], 404);
             }
-
+    
             return response()->json($product);
-
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => $th -> getMessage()
+                'message' => $th->getMessage()
             ]);
         }
-    }
+    }    
+    
     
     public function update(Request $request, $id){
     
