@@ -60,7 +60,7 @@ class BrandController extends Controller
 
             return response()->json([
                 'message' => 'Success',
-                'data' => $data
+                'data' => $brand
             ]);
 
         } catch (\Throwable $th) {

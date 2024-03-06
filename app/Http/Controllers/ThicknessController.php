@@ -25,13 +25,13 @@ class ThicknessController extends Controller
     public function store(Request $request){
         $validatedData = $request->validate([
             'value' => 'required|string',
-            'unit' => 'required|string',
+            // 'unit' => 'required|string',
         ]);
 
         try {
             $thickness = Thickness::firstOrCreate([
                 'value' => $validatedData['value'],
-                'unit' => $validatedData['unit']
+                'unit' => 'mm'
             ]);
         
             if ($thickness->wasRecentlyCreated) {

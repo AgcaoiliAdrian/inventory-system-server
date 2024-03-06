@@ -32,7 +32,7 @@ class GradeController extends Controller
             if ($existingGrade) {
                 return response()->json([
                     'message' => 'Grade already exists.'
-                ]);
+                ], 422);
             }
     
             $grade = Grade::create([
@@ -40,13 +40,14 @@ class GradeController extends Controller
             ]);
     
             return response()->json([
-                'message' => 'Grade successfully added.'
+                'message' => 'Grade successfully added.',
+                'data' => $grade
             ]);
     
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => $th->getMessage()
-            ]);
+            ], 500);
         }
     }       
 
