@@ -16,7 +16,8 @@ class StockOut extends Migration
         Schema::create('stock_out', function(Blueprint $table){
             $table->increments('id');
             $table->unsignedInteger('panel_stock_id')->nullable();
-            $table->unsignedInteger('crate_stock_id')->nullable();
+            $table->integer('is_batch');
+            // $table->unsignedInteger('crate_stock_id')->nullable();
             $table->date('stock_out_date');
 
             $table->timestamps();

@@ -19,11 +19,27 @@ class BarcodeDetails extends Model
         'thickness_id',
         'barcode_number'
     ];
+
     public $timestamps = TRUE;
 
     public function panels()
     {
         return $this->hasMany(Panel::class, 'barcode_id');
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id')->select('id', 'brand_name');
+    }
+    
+    public function variant()
+    {
+        return $this->belongsTo(Variant::class, 'variant_id')->select('id', 'variant_name');
+    }
+
+    public function thickness()
+    {
+        return $this->belongsTo(Thickness::class, 'thickness_id')->select('id', 'value', 'unit');
     }
 
 }

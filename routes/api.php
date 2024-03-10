@@ -50,9 +50,15 @@ use Illuminate\Support\Facades\Route;
         Route::post('/product', 'ProductController@store');
         Route::put('/product/{id}', 'ProductController@update');
 
+        //Scanned Barcode Data Endpoint
+        Route::get('/scanned/{id}', 'ScanBarcodeController@show');
+
         //Panel Endpoint
         Route::get('/panel/{id}', 'StockInController@show');
-        Route::put('/panel/{id}', 'StockInController@stockIn');
+        Route::post('/panel/{id}', 'StockInController@stockIn');
+        
+        //Stock Out Endpoint
+        Route::get('/stock-out', 'StockOutController@index');
 
         //Generate Sticker
         Route::post('/generate', 'GenerateStickerController@generate');

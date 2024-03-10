@@ -63,10 +63,12 @@ class StockInController extends Controller
                 $batch_number = Helpers::generateBatchNumber($request->encoding_type);
             }
 
-            $crate_stock = new CrateStock();
-            $crate_stock->panel_stock_id = $panel_stock->id;
-            $crate_stock->batch_number = $batch_number;
-            $crate_stock->save();                     
+            if($request -> encoding_type === 1){
+                $crate_stock = new CrateStock();
+                $crate_stock->panel_stock_id = $panel_stock->id;
+                $crate_stock->batch_number = $batch_number;
+                $crate_stock->save(); 
+            }           
     
             return response('Success');
     
