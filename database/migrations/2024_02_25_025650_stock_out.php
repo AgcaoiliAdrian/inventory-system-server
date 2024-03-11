@@ -17,7 +17,6 @@ class StockOut extends Migration
             $table->increments('id');
             $table->unsignedInteger('panel_stock_id')->nullable();
             $table->integer('is_batch');
-            // $table->unsignedInteger('crate_stock_id')->nullable();
             $table->date('stock_out_date');
 
             $table->timestamps();

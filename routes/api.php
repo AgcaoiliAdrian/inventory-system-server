@@ -59,6 +59,7 @@ use Illuminate\Support\Facades\Route;
         
         //Stock Out Endpoint
         Route::get('/stock-out', 'StockOutController@index');
+        Route::post('/stock-out/{id}', 'StockOutController@stockOut');
 
         //Generate Sticker
         Route::post('/generate', 'GenerateStickerController@generate');
