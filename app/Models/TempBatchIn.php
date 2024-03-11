@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\BarcodeDetails;
 
 class TempBatchIn extends Model
 {
@@ -16,6 +17,7 @@ class TempBatchIn extends Model
         'grade_id',
         'manufacturing_date',
         'quantity',
+        'status'
     ];
 
     public $timestamps = TRUE;

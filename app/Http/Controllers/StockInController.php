@@ -8,6 +8,7 @@ use App\Models\Brand;
 use App\Models\Panel;
 use App\Models\BarcodeDetails;
 use App\Models\CrateStock;
+use App\Models\TempBatchIn;
 use App\Helpers\Helpers;
 
 class StockInController extends Controller
@@ -25,7 +26,31 @@ class StockInController extends Controller
         }
     }
 
-    public function stockIn($id, Request $request){
+    public function batchStockIn($id, Request $request){
+        try {
+            $scanned = BarcodeDetails::findOrFail($id);
+            $details = BarcodeDetails::with(['brand', 'variant'])->find($scanned -> id);
+
+            $batch_in = new TempBatchIn();
+            $batch_in -> barcode_id = $scanned -> id;
+            $batch_in -> grade_id = $request -> grade_id;
+            $batch_in -> quantity = 1;
+            $batch_in -> manufacturing_date = Carbon::now();
+            // $batch_in -> status = 
+            $batch_in -> save();
+
+            return response()->json([
+                'message' => 'Success'
+            ]);
+            
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    private function stockIn($id, Request $request){
         try {
     
             $barcode = BarcodeDetails::findOrFail($id);

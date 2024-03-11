@@ -55,7 +55,7 @@ use Illuminate\Support\Facades\Route;
 
         //Panel Endpoint
         Route::get('/panel/{id}', 'StockInController@show');
-        Route::post('/panel/{id}', 'StockInController@stockIn');
+        Route::post('/panel/{id}', 'StockInController@batchStockIn');
         
         //Stock Out Endpoint
         Route::get('/stock-out', 'StockOutController@index');

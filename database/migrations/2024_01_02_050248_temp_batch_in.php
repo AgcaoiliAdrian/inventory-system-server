@@ -19,6 +19,7 @@ class TempBatchIn extends Migration
             $table->unsignedInteger('grade_id');
             $table->integer('quantity');
             $table->date('manufacturing_date');
+            $table->string('status');
 
             $table->timestamps();
         });
