@@ -15,6 +15,10 @@ class TempBatchIn extends Model
     public $fillable = [
         'barcode_id',
         'grade_id',
+        'glue_type_id',
+        'thickness_id',
+        'brand_id',
+        'variant_id',
         'manufacturing_date',
         'quantity',
         'status'

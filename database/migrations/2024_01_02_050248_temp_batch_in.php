@@ -17,6 +17,10 @@ class TempBatchIn extends Migration
             $table->increments('id');
             $table->unsignedInteger('barcode_id')->nullable();
             $table->unsignedInteger('grade_id');
+            $table->unsignedInteger('glue_type_id');
+            $table->unsignedInteger('thickness_id');
+            $table->unsignedInteger('variant_id')->nullable();
+            $table->unsignedInteger('brand_id');
             $table->integer('quantity');
             $table->date('manufacturing_date');
             $table->string('status');

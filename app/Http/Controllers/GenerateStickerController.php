@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\BarcodeDetails;
 use App\Helpers\Helpers;
-
 use Carbon\Carbon;
+
 use Illuminate\Http\Request;
 
 class GenerateStickerController extends Controller
@@ -21,8 +21,7 @@ class GenerateStickerController extends Controller
         
         // $barcode_number = Helpers::generateBarcodeNumber();
 
-        for($i = 1; $i <= intval($request->quantity); $i++ ){
-            
+        for ($i = 1; $i <= intval($request->quantity); $i++ ){
             // Generate a new barcode number for each iteration
             $barcode_number = Helpers::generateBarcodeNumber($brandId);
             
@@ -76,7 +75,7 @@ class GenerateStickerController extends Controller
         imagejpeg($existingImage, $imagePathWithBarcode);
     
         // Loop to add images to the section
-        for ($i = 1; $i <= intval($request->quantity); $i++) {
+        for ($i = 1; $i <= intval($request->quantity); $i++ ) {
             // Add the image with the barcode to the Word document
             $section->addImage($imagePathWithBarcode, array(
                 'width' => 210, // 7cm converted to points (1 cm = 28.35 points)
