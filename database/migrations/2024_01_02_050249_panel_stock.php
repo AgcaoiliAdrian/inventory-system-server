@@ -19,7 +19,6 @@ class PanelStock extends Migration
             $table->unsignedInteger('grade_id');
             $table->integer('quantity');
             $table->date('manufacturing_date');
-            $table->integer('is_batch');
             $table->string('status');
             
             $table->timestamps();

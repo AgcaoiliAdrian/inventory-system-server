@@ -17,7 +17,7 @@ class Panel extends Model
         'grade_id',
         'manufacturing_date',
         'quantity',
-        'is_batch'
+        'status'
     ];
 
     public $timestamps = TRUE;

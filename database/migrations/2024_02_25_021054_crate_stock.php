@@ -15,8 +15,12 @@ class CrateStock extends Migration
     {
         Schema::create('crate_stock', function (Blueprint $table){
             $table->increments('id');
-            $table->unsignedInteger('panel_stock_id');
+            $table->unsignedInteger('barcode_id')->nullable();
+            $table->unsignedInteger('grade_id');
+            $table->integer('quantity');
+            $table->date('manufacturing_date');
             $table->string('batch_number')->nullable();
+            $table->string('status')->nullable();
 
             $table->timestamps();
         });

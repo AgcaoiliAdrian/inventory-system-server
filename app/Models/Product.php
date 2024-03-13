@@ -28,18 +28,18 @@ class Product extends Model
     public $timestamps = TRUE;
 
     public function brand(){
-        return $this->belongsTo(Brand::class, 'brand_id');
+        return $this->belongsTo(Brand::class, 'brand_id')->select('id', 'brand_name');
     }
 
     public function glue(){
-        return $this->belongsTo(GlueType::class, 'glue_type_id');
+        return $this->belongsTo(GlueType::class, 'glue_type_id')->select('id', 'type', 'brand');
     }
 
     public function thickness(){
-        return $this->belongsTo(Thickness::class, 'thickness_id');
+        return $this->belongsTo(Thickness::class, 'thickness_id')->select('id', 'value', 'unit');
     }
 
     public function variant(){
-        return $this->belongsTo(Variant::class, 'variant_id');
+        return $this->belongsTo(Variant::class, 'variant_id')->select('id', 'variant_name');
     }
 }

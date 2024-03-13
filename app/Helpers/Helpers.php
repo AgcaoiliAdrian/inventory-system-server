@@ -36,6 +36,9 @@ class Helpers
         // Concatenate the components to form the batch number
         $batchNumber = $currentYear . '-' . $currentMonth . '-' . $formattedSeries;
 
+         // Increment the series for the next execution
+        $series++;
+
         return $batchNumber;
     }
 
