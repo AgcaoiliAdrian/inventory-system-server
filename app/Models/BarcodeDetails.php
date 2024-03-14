@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Panel;
+use App\Models\Grade;
+
 
 class BarcodeDetails extends Model
 {
@@ -40,6 +42,11 @@ class BarcodeDetails extends Model
     public function thickness()
     {
         return $this->belongsTo(Thickness::class, 'thickness_id')->select('id', 'value', 'unit');
+    }
+
+    public function grade()
+    {
+        return $this->belongsTo(Grade::class)->select('id', 'grading');
     }
 
 }

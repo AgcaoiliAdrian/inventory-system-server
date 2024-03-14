@@ -11,13 +11,21 @@ class PanelStockInController extends Controller
 {
     public function index(){
         try {
-            
+            $data = BarcodeDetails::with(['variant', 'brand', 'thickness', 'grade'])
+            ->join('panel_stock', 'barcode_details.id', '=', 'panel_stock.barcode_id')
+            ->whereIn('barcode_details.id', function ($query) {
+                $query->select('barcode_id')->from('panel_stock');
+            })
+            ->get();
+    
+            return response()->json($data);
+    
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => $th -> getMessage()
+                'message' => $th->getMessage()
             ]);
         }
-    }
+    }    
 
     public function panelStockIn($id, Request $request){
         try {

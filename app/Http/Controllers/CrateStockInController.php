@@ -25,6 +25,19 @@ class CrateStockInController extends Controller
             ]);
         }
     }
+    
+    public function IndexTempBatchIn(){
+        try {
+            $data = TempBatchIn::with(['brand', 'variant', 'thickness', 'grade', 'barcode'])->get();
+
+            return response()->json($data);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th
+            ]);
+        }
+    }
 
     public function tempBatchStockIn($id, Request $request){
         try {

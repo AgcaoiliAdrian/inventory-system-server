@@ -53,13 +53,20 @@ use Illuminate\Support\Facades\Route;
         //Scanned Barcode Data Endpoint
         Route::get('/scanned/{id}', 'ScanBarcodeController@show');
 
-        //Crate Endpoint
-        Route::get('/crate/{id}', 'CrateStockInController@show');
-        Route::post('/crate/{id}', 'CrateStockInController@tempBatchStockIn'); // This API is for storing temporarily the scanned barcode by batch
-        Route::post('/crate', 'CrateStockInController@saveBatchStockIn'); //This API is for saving the temp saved batch
+        //Crate Endpoint --- Stock-In
+        Route::get('/crate-in/{id}', 'CrateStockInController@show');
+        Route::post('/crate-in/{id}', 'CrateStockInController@tempBatchStockIn'); // This API is for storing temporarily the scanned barcode by batch stack-in
+        Route::post('/crate-in', 'CrateStockInController@saveBatchStockIn'); //This API is for saving temporary batch stock-in
+        Route::get('/crate-in', 'CrateStockInController@IndexTempBatchIn');
+
+        //Crate Endpoint --- Stock-Out
+        Route::post('/crate-out/{id}', 'CrateStockOutController@tempBatchStockOut'); //This API is for storing temporarily the scanned barcode by batch stock-out
+        Route::post('/crate-out', 'CrateStockOutController@saveBatchStockOut'); //This API is for saving temporary batch stock-out
+        Route::get('/crate-out', 'CrateStockOutController@IndexTempBatchOut');
 
         //Panel Endpoint
         Route::post('/panel/{id}', 'PanelStockInController@panelStockIn');
+        Route::get('/panel', 'PanelStockInController@index');
         
         //Stock Out Endpoint
         Route::get('/stock-out', 'StockOutController@index');
