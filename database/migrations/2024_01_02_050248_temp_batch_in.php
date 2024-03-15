@@ -22,6 +22,7 @@ class TempBatchIn extends Migration
             $table->unsignedInteger('variant_id')->nullable();
             $table->unsignedInteger('brand_id');
             $table->integer('quantity');
+            $table->double('price');
             $table->date('manufacturing_date');
             $table->string('status');
 

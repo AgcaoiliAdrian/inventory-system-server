@@ -18,6 +18,7 @@ class CrateStock extends Migration
             $table->unsignedInteger('barcode_id')->nullable();
             $table->unsignedInteger('grade_id');
             $table->integer('quantity');
+            $table->double('price');
             $table->date('manufacturing_date');
             $table->string('batch_number')->nullable();
             $table->string('status')->nullable();

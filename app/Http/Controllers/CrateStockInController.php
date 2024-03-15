@@ -39,6 +39,7 @@ class CrateStockInController extends Controller
         }
     }
 
+
     public function tempBatchStockIn($id, Request $request){
         try {
             $scanned = BarcodeDetails::findOrFail($id);
@@ -62,6 +63,7 @@ class CrateStockInController extends Controller
                 'glue_type_id' => $request->glue_type_id,
                 'thickness_id' => $request->thickness_id,
                 'quantity' => 1,
+                'price' => $request->price,
                 'manufacturing_date' => now(),
                 'status' => $status,
             ]);
@@ -71,7 +73,7 @@ class CrateStockInController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);
         }
-    }    
+    }
     
 
     public function saveBatchStockIn(Request $request){
@@ -93,6 +95,7 @@ class CrateStockInController extends Controller
                 $crate_stock -> barcode_id = $data -> barcode_id;
                 $crate_stock -> grade_id = $data -> grade_id;
                 $crate_stock -> quantity = 1;
+                $crate_stock -> price = $data -> price;
                 $crate_stock -> manufacturing_date =  Carbon::now();
                 $crate_stock -> batch_number = $batch_number;
                 $crate_stock -> status = 'in';
@@ -103,7 +106,6 @@ class CrateStockInController extends Controller
                 }
             }
         
-    
             return response('Success');
     
         } catch (\Throwable $th) {

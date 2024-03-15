@@ -45,7 +45,7 @@ use Illuminate\Support\Facades\Route;
         Route::get('/grade/{id}', 'GradeController@show');
 
         //Product Endpoint
-        Route::get('/product', 'ProductController@index');
+        Route::get('/product', 'ProductController@productList');
         Route::get('/product/{id}', 'ProductController@show');
         Route::post('/product', 'ProductController@store');
         Route::put('/product/{id}', 'ProductController@update');
@@ -57,12 +57,12 @@ use Illuminate\Support\Facades\Route;
         Route::get('/crate-in/{id}', 'CrateStockInController@show');
         Route::post('/crate-in/{id}', 'CrateStockInController@tempBatchStockIn'); // This API is for storing temporarily the scanned barcode by batch stack-in
         Route::post('/crate-in', 'CrateStockInController@saveBatchStockIn'); //This API is for saving temporary batch stock-in
-        Route::get('/crate-in', 'CrateStockInController@IndexTempBatchIn');
+        Route::get('/crate-in-temp', 'CrateStockInController@IndexTempBatchIn'); //Get all the temporary stock-in
 
         //Crate Endpoint --- Stock-Out
         Route::post('/crate-out/{id}', 'CrateStockOutController@tempBatchStockOut'); //This API is for storing temporarily the scanned barcode by batch stock-out
         Route::post('/crate-out', 'CrateStockOutController@saveBatchStockOut'); //This API is for saving temporary batch stock-out
-        Route::get('/crate-out', 'CrateStockOutController@IndexTempBatchOut');
+        Route::get('/crate-out-temp', 'CrateStockOutController@IndexTempBatchOut'); //Get all the temporary stock-out 
 
         //Panel Endpoint
         Route::post('/panel/{id}', 'PanelStockInController@panelStockIn');

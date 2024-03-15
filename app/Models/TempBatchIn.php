@@ -23,6 +23,7 @@ class TempBatchIn extends Model
         'variant_id',
         'manufacturing_date',
         'quantity',
+        'price',
         'status'
     ];
 

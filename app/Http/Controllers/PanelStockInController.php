@@ -48,6 +48,7 @@ class PanelStockInController extends Controller
             $panel_stock -> grade_id = $request -> grade_id;
             $panel_stock -> manufacturing_date = Carbon::now();
             $panel_stock -> quantity = 1;
+            $panel_stock -> price = $request -> price;
             $panel_stock -> status = 'in';
             $panel_stock -> save();
 
