@@ -68,7 +68,7 @@ class CrateStockInController extends Controller
                 'status' => $status,
             ]);
     
-            return response()->json(['message' => 'Success']);
+            return response()->json(['message' => 'New Record added', 'status' => $status], 200);
     
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);

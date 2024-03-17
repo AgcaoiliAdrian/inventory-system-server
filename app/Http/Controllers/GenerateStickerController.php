@@ -53,6 +53,10 @@ class GenerateStickerController extends Controller
 
             // Increment the series number for the next iteration
             $series++;
+
+            // Generate barcode
+            $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+            $barcodeImage = $generator->getBarcode($details->id, $generator::TYPE_CODE_128, 18, 600);
         }       
     
         // Get the image filename from the request
@@ -65,10 +69,6 @@ class GenerateStickerController extends Controller
         if (!file_exists($existingImagePath)) {
             return response()->json(['error' => 'Image file not found.'], 404);
         }
-    
-        // Generate barcode
-        $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-        $barcodeImage = $generator->getBarcode('Dre', $generator::TYPE_CODE_128, 18, 600);
     
         // Load existing image
         $existingImage = imagecreatefromjpeg($existingImagePath);
