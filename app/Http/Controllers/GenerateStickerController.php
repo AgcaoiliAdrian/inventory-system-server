@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\BarcodeDetails;
 use App\Helpers\Helpers;
-use Carbon\Carbon;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class GenerateStickerController extends Controller
@@ -19,15 +19,41 @@ class GenerateStickerController extends Controller
 
         $brandId = $request->brand_id;
         
-        // $barcode_number = Helpers::generateBarcodeNumber();
+        $currentYear = date('Y');
+        $currentMonth = date('m');
 
-        for ($i = 1; $i <= intval($request->quantity); $i++ ){
-            // Generate a new barcode number for each iteration
-            $barcode_number = Helpers::generateBarcodeNumber($brandId);
-            
-            // Create barcode details with the generated barcode number
-            $details = $this->createBarcodeDetails($request, $barcode_number);
+        $latestBatch = BarcodeDetails::where('brand_id', $request->brand_id)
+            ->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->orderBy('created_at', 'desc')
+            ->orderBy('barcode_number', 'desc')
+            ->first();
+
+        $series = 1;
+        if ($latestBatch) {
+            // Extract the series number from the latest batch number and increment it
+            $latestSeries = explode('-', $latestBatch->barcode_number)[2];
+            $series = (int)$latestSeries + 1;
         }
+
+        // Generate and assign barcode numbers within the loop
+        for ($i = 1; $i <= intval($request->quantity); $i++) {
+            // Format the series number with leading zeros
+            $formattedSeries = str_pad($series, 4, '0', STR_PAD_LEFT);
+
+            // Concatenate the components to form the barcode number
+            $barcode_number = $currentYear . '-' . $currentMonth . '-' . $formattedSeries;
+
+            // Create barcode details with the generated barcode number
+            $details = BarcodeDetails::create([
+                'brand_id' => $request->brand_id,
+                'variant_id' => $request->variant_id,
+                'barcode_number' => $barcode_number
+            ]);
+
+            // Increment the series number for the next iteration
+            $series++;
+        }       
     
         // Get the image filename from the request
         $imageFilename = $request->input('brand');
@@ -42,7 +68,7 @@ class GenerateStickerController extends Controller
     
         // Generate barcode
         $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-        $barcodeImage = $generator->getBarcode($details, $generator::TYPE_CODE_128, 18, 600);
+        $barcodeImage = $generator->getBarcode('Dre', $generator::TYPE_CODE_128, 18, 600);
     
         // Load existing image
         $existingImage = imagecreatefromjpeg($existingImagePath);
@@ -75,7 +101,7 @@ class GenerateStickerController extends Controller
         imagejpeg($existingImage, $imagePathWithBarcode);
     
         // Loop to add images to the section
-        for ($i = 1; $i <= intval($request->quantity); $i++ ) {
+        for ($i = 1; $i <= intval($request->quantity); $i++) {
             // Add the image with the barcode to the Word document
             $section->addImage($imagePathWithBarcode, array(
                 'width' => 210, // 7cm converted to points (1 cm = 28.35 points)
@@ -99,14 +125,5 @@ class GenerateStickerController extends Controller
     
         // Return success message
         return "Barcode and Word document with images generated successfully.";
-    }
-
-    private function createBarcodeDetails(Request $request, $barcode_number)
-    {
-        return BarcodeDetails::create([
-            'brand_id' => $request->brand_id,
-            'variant_id' => $request->variant_id,
-            'barcode_number' => $barcode_number
-        ]);
     }
 }

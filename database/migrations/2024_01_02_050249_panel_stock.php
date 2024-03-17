@@ -16,7 +16,7 @@ class PanelStock extends Migration
         Schema::create('panel_stock', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('barcode_id')->nullable();
-            $table->unsignedInteger('grade_id');
+            // $table->unsignedInteger('grade_id');
             $table->integer('quantity');
             $table->double('price');
             $table->date('manufacturing_date');

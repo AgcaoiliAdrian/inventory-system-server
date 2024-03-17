@@ -64,9 +64,12 @@ use Illuminate\Support\Facades\Route;
         Route::post('/crate-out', 'CrateStockOutController@saveBatchStockOut'); //This API is for saving temporary batch stock-out
         Route::get('/crate-out-temp', 'CrateStockOutController@IndexTempBatchOut'); //Get all the temporary stock-out 
 
-        //Panel Endpoint
-        Route::post('/panel/{id}', 'PanelStockInController@panelStockIn');
-        Route::get('/panel', 'PanelStockInController@index');
+        //Panel Endpoint --- Stock In
+        // Route::post('/panel/{id}', 'PanelStockInController@panelStockIn');
+        // Route::get('/panel', 'PanelStockInController@index');
+        Route::post('/panel-in/{id}', 'PanelStockInController@tempPanelStockIn');
+        Route::post('/panel-in', 'PanelStockInController@savePanelStockIn');
+
         
         //Stock Out Endpoint
         Route::get('/stock-out', 'StockOutController@index');

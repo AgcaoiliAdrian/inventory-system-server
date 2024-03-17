@@ -14,7 +14,7 @@ class Panel extends Model
 
     public $fillable = [
         'barcode_id',
-        'grade_id',
+        // 'grade_id',
         'manufacturing_date',
         'quantity',
         'price',

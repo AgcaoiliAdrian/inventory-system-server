@@ -4,37 +4,36 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Panel;
-use App\Models\Grade;
+use App\Models\BarcodeDetails;
+use App\Models\Brand;
 
 
-class BarcodeDetails extends Model
+class TempPanelIn extends Model
 {
     use HasFactory;
 
-    protected $table = 'barcode_details';
+    protected $table = 'temp_panel_in';
 
     public $fillable = [
-        'brand_id',
-        'variant_id',
+        'barcode_id',
         'grade_id',
         'glue_type_id',
         'thickness_id',
-        'barcode_number'
+        'brand_id',
+        'variant_id',
+        'manufacturing_date',
+        'quantity',
+        'price',
+        'status'
     ];
 
     public $timestamps = TRUE;
-
-    public function panels()
-    {
-        return $this->hasMany(Panel::class, 'barcode_id');
-    }
 
     public function brand()
     {
         return $this->belongsTo(Brand::class, 'brand_id')->select('id', 'brand_name');
     }
-    
+
     public function variant()
     {
         return $this->belongsTo(Variant::class, 'variant_id')->select('id', 'variant_name');
@@ -52,17 +51,11 @@ class BarcodeDetails extends Model
 
     public function grade()
     {
-        return $this->belongsTo(Grade::class, 'grade_id')->select('id', 'grading');
+        return $this->belongsTo(Grade::class)->select('id', 'grading');
     }
 
-    public function crateStock()
+    public function barcode()
     {
-        return $this->hasMany(Crate::class, 'barcode_id');
+        return $this->belongsTo(BarcodeDetails::class)->select('id', 'barcode_number');
     }
-    
-    public function panelStock()
-    {
-        return $this->hasMany(Panel::class, 'barcode_id');
-    }    
-    
 }

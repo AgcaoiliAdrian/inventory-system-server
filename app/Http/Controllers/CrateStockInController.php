@@ -28,7 +28,7 @@ class CrateStockInController extends Controller
     
     public function IndexTempBatchIn(){
         try {
-            $data = TempBatchIn::with(['brand', 'variant', 'thickness', 'grade', 'barcode'])->get();
+            $data = TempBatchIn::with(['brand', 'variant', 'thickness', 'grade', 'glue', 'barcode'])->get();
 
             return response()->json($data);
 
@@ -89,11 +89,12 @@ class CrateStockInController extends Controller
                 $barcode->update([
                     'glue_type_id' => $data->glue_type_id,
                     'thickness_id' => $data->thickness_id,
+                    'grade_id' => $data->grade_id
                 ]);
     
                 $crate_stock = new CrateStock();
                 $crate_stock -> barcode_id = $data -> barcode_id;
-                $crate_stock -> grade_id = $data -> grade_id;
+                // $crate_stock -> grade_id = $data -> grade_id;
                 $crate_stock -> quantity = 1;
                 $crate_stock -> price = $data -> price;
                 $crate_stock -> manufacturing_date =  Carbon::now();

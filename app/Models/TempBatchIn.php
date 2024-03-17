@@ -44,6 +44,11 @@ class TempBatchIn extends Model
         return $this->belongsTo(Thickness::class, 'thickness_id')->select('id', 'value', 'unit');
     }
 
+    public function glue()
+    {
+        return $this->belongsTo(GlueType::class, 'glue_type_id')->select('id', 'type', 'brand');
+    }
+
     public function grade()
     {
         return $this->belongsTo(Grade::class)->select('id', 'grading');

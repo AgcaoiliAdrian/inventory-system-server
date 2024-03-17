@@ -82,7 +82,7 @@ class ProductController extends Controller
 
     public function show($id, Request $request){
         try {
-            $product = Product::with('brand', 'variant', 'glue', 'thickness')->find($id);
+            $product = Product::with('brand', 'variant', 'glue', 'thickness', 'grade')->find($id);
     
             if (!$product) {
                 return response()->json([
@@ -124,19 +124,34 @@ class ProductController extends Controller
             return response()->json(['message' => $th->getMessage()], 500);
         }
     }
-    
+
     public function productList(Request $request){
         try {
-            $data = BarcodeDetails::leftJoin('crate_stock', 'barcode_details.id', '=', 'crate_stock.barcode_id')
+            $data = BarcodeDetails::with('brand', 'variant', 'glue', 'thickness', 'grade')
+                ->whereHas('glue', function ($query) {
+                    $query->whereNotNull('glue_type_id');
+                })
+                ->whereHas('thickness', function ($query) {
+                    $query->whereNotNull('thickness_id');
+                })
+                ->leftJoin('crate_stock', 'barcode_details.id', '=', 'crate_stock.barcode_id')
                 ->leftJoin('panel_stock', 'barcode_details.id', '=', 'panel_stock.barcode_id')
                 ->select(
-                    // 'barcode_details.id',
+                    'barcode_details.brand_id',
+                    'barcode_details.variant_id',
+                    'barcode_details.glue_type_id',
+                    'barcode_details.thickness_id',
+                    'barcode_details.grade_id',
                     DB::raw('COUNT(DISTINCT crate_stock.id) as crate_stock_count'),
                     DB::raw('COUNT(DISTINCT panel_stock.id) as panel_stock_count')
                 )
-                ->whereNotNull('barcode_details.thickness_id')
-                ->whereNotNull('barcode_details.glue_type_id')
-                ->groupBy('barcode_details.brand_id', 'barcode_details.variant_id', 'barcode_details.glue_type_id', 'barcode_details.thickness_id')
+                ->groupBy(
+                    'barcode_details.brand_id',
+                    'barcode_details.variant_id',
+                    'barcode_details.glue_type_id',
+                    'barcode_details.thickness_id',
+                    'barcode_details.grade_id',
+                )
                 ->get();
     
             return $data;
@@ -147,40 +162,4 @@ class ProductController extends Controller
             ]);
         }
     }
-}
-
-
-// public function productList(Request $request){
-//     try {
-//         $data = BarcodeDetails::with('brand', 'variant', 'glue', 'thickness')
-//             ->whereHas('glue', function ($query) {
-//                 $query->whereNotNull('glue_type_id');
-//             })
-//             ->whereHas('thickness', function ($query) {
-//                 $query->whereNotNull('thickness_id');
-//             })
-//             ->get();
-
-//         foreach ($data as $item) {
-//             // Count crate_stock for this BarcodeDetails item
-//             $crateCount = Crate::where('barcode_id', $item->id)->count();
-//             // Count panel_stock for this BarcodeDetails item
-//             $panelCount = Panel::where('barcode_id', $item->id)->count();
-//             // Assign the counts to the item
-//             $item->crate_stock_count = $crateCount;
-//             $item->panel_stock_count = $panelCount;
-//         }
-
-//         // Convert the collection to a plain array and re-index
-//         $uniqueData = $data->unique(function ($item) {
-//             return $item->brand_id . '-' . $item->variant_id . '-' . $item->glue_type_id . '-' . $item->thickness_id;
-//         })->values()->all();
-
-//         return $uniqueData;
-        
-//     } catch (\Throwable $th) {
-//         return response()->json([
-//             'message' => $th->getMessage()
-//         ]);
-//     }
-// }      
+}      
