@@ -70,6 +70,10 @@ use Illuminate\Support\Facades\Route;
         Route::post('/panel-in/{id}', 'PanelStockInController@tempPanelStockIn');
         Route::post('/panel-in', 'PanelStockInController@savePanelStockIn');
 
+        //Panel Endpoint --- Stock Out
+        Route::get('/panel-out', 'PanelStockOutController@show');
+        Route::post('/panel-out/{id}', 'PanelStockOutController@tempPanelStockOut');
+
         
         //Stock Out Endpoint
         Route::get('/stock-out', 'StockOutController@index');

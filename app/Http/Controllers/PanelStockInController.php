@@ -82,6 +82,10 @@ class PanelStockInController extends Controller
             $panel -> save();
         }
 
+        if($panel){
+            TempPanelIn::truncate();
+        }
+
         return response('Success');
     }
 
@@ -109,7 +113,6 @@ class PanelStockInController extends Controller
                 'quantity' => 1,
                 'price' => $request->price,
                 'manufacturing_date' => now(),
-                // 'status' => $status,
             ]);
     
             return response()->json(['message' => 'Success']);
