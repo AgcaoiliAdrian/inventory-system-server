@@ -20,6 +20,9 @@ use Illuminate\Support\Facades\Route;
 
     Route::namespace('App\Http\Controllers')->group(function () {
 
+        //User Login and Registration
+        Route::post('/register', 'UserController@register');
+
         //Brand Endpoint
         Route::get('/brand', 'BrandController@index');
         Route::post('/brand', 'BrandController@store');
@@ -73,6 +76,8 @@ use Illuminate\Support\Facades\Route;
         //Panel Endpoint --- Stock Out
         Route::get('/panel-out', 'PanelStockOutController@show');
         Route::post('/panel-out/{id}', 'PanelStockOutController@tempPanelStockOut');
+        Route::post('/panel-out', 'PanelStockOutController@savePanelStockOut');
+
 
         
         //Stock Out Endpoint
