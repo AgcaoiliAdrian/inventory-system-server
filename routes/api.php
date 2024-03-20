@@ -69,15 +69,14 @@ use Illuminate\Support\Facades\Route;
 
         //Panel Endpoint --- Stock In
         // Route::post('/panel/{id}', 'PanelStockInController@panelStockIn');
-        // Route::get('/panel', 'PanelStockInController@index');
-        Route::post('/panel-in/{id}', 'PanelStockInController@tempPanelStockIn');
+        Route::get('/panel-in', 'PanelStockInController@index');//Get All the panels with status in
+        Route::post('/panel-in/{id}', 'PanelStockInController@tempPanelStockIn'); //
         Route::post('/panel-in', 'PanelStockInController@savePanelStockIn');
 
         //Panel Endpoint --- Stock Out
-        Route::get('/panel-out', 'PanelStockOutController@show');
+        Route::get('/panel-out', 'PanelStockOutController@index'); //Get All the panels with status out
         Route::post('/panel-out/{id}', 'PanelStockOutController@tempPanelStockOut');
         Route::post('/panel-out', 'PanelStockOutController@savePanelStockOut');
-
         
         //Stock Out Endpoint
         Route::get('/stock-out', 'StockOutController@index');

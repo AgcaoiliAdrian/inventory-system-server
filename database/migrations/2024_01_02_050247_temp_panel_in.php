@@ -24,7 +24,7 @@ class TempPanelIn extends Migration
             $table->integer('quantity');
             $table->double('price');
             $table->date('manufacturing_date');
-            // $table->string('status');
+            $table->string('status');
 
             $table->timestamps();
         });
