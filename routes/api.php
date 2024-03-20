@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 
         //User Login and Registration
         Route::post('/register', 'UserController@register');
+        Route::post('/login', 'UserController@login');
 
         //Brand Endpoint
         Route::get('/brand', 'BrandController@index');

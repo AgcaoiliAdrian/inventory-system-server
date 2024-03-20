@@ -7,6 +7,7 @@ use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\OAuth;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -89,6 +90,22 @@ class UserController extends Controller
                     return response()->json(['message' => 'User registered successfully. Failed to send email.']);
                 }
             }      
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function login(Request $request){
+        try {
+            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                // Authentication successful
+                return response()->json([
+                    'Success',
+                    Auth::user()
+                ]);
+            }          
+            // Authentication failed
+            return response('Fail');
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
