@@ -78,7 +78,6 @@ use Illuminate\Support\Facades\Route;
         Route::post('/panel-out/{id}', 'PanelStockOutController@tempPanelStockOut');
         Route::post('/panel-out', 'PanelStockOutController@savePanelStockOut');
 
-
         
         //Stock Out Endpoint
         Route::get('/stock-out', 'StockOutController@index');

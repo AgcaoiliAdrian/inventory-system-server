@@ -11,6 +11,8 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "league/oauth2-google": "^4.0",
+        "phpmailer/phpmailer": "^6.9",
         "phpoffice/phpword": "^1.2",
         "picqer/php-barcode-generator": "^2.4"
     },
