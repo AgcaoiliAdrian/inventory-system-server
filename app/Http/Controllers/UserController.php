@@ -106,25 +106,35 @@ class UserController extends Controller
         }
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         try {
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
                 $user = Auth::user()->load('info');
 
                 // Check if the password used is the default password
-                if ($request->password === 'Mega_Plywood2024@') {
-                    return response()->json(['message' => 'You are using the default password. Please change it.'], 402);
+                if ($user->password === 'Mega_Plywood2024@') {
+                    // Update the password
+                    $this->updatePassword($user, $request->new_password);
+
+                    return response()->json(['message' => 'You are using the default password. Password updated successfully.'], 200);
                 }
 
                 // Authentication successful
                 return response()->json($user, 200);
-            }   
-                   
+            }
+
             // Authentication failed
             return response()->json(['error' => 'Invalid credentials'], 401);
-            
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
+    }
+
+    private function updatePassword($user, $newPassword)
+    {
+        // Update user's password
+        $user->password = Hash::make($newPassword);
+        $user->save();
     }
 }

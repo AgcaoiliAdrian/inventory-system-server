@@ -15,7 +15,8 @@ class TempPanelOut extends Migration
     {
         Schema::create('temp_panel_out', function(Blueprint $table){
             $table->increments('id');
-            $table->unsignedInteger('panel_stock_id');
+            $table->unsignedInteger('panel_stock_id')->nullable();
+            $table->unsignedInteger('crate_stock_id')->nullable();
 
             $table->timestamps();
 

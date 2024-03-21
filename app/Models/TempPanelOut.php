@@ -13,6 +13,7 @@ class TempPanelOut extends Model
 
     public $fillable = [
         'panel_stock_id',
+        'crate_stock_id'
     ];
 
     public $timestamps = TRUE;
