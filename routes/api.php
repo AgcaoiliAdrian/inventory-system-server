@@ -72,6 +72,7 @@ use Illuminate\Support\Facades\Route;
         // Route::get('/panel', 'PanelStockInController@index');
         Route::post('/panel-in/{id}', 'PanelStockInController@tempPanelStockIn');
         Route::post('/panel-in', 'PanelStockInController@savePanelStockIn');
+        Route::get('/panel-in-temp', 'PanelStockInController@IndexTempPanelIn'); //Get all the temporary stock-out 
 
         //Panel Endpoint --- Stock Out
         Route::get('/panel-out', 'PanelStockOutController@show');

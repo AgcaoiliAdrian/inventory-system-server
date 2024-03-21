@@ -28,6 +28,19 @@ class PanelStockInController extends Controller
         }
     }    
 
+    public function IndexTempPanelIn(){
+        try {
+            $data = TempPanelIn::with(['brand', 'variant', 'thickness', 'grade', 'glue', 'barcode'])->get();
+
+            return response()->json($data);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th
+            ]);
+        }
+    }
+
     public function panelStockIn($id, Request $request){
         try {
             $barcode = BarcodeDetails::findOrFail($id);
@@ -84,13 +97,17 @@ class PanelStockInController extends Controller
 
         if($panel){
             TempPanelIn::truncate();
+            return  response()->json(['message' => 'Panel stock in succesfully saved'], 200);
         }
 
-        return response('Success');
+        return response()->json(['message' => 'Failed to saved panel stock in'], 401);
+
+       
     }
 
     public function tempPanelStockIn($id, Request $request){
         try {
+            
             $scanned = BarcodeDetails::findOrFail($id);
 
             // Initialize status with 'Success'
@@ -103,7 +120,7 @@ class PanelStockInController extends Controller
             // }
     
             // Save the new data with the determined status
-            TempPanelIn::create([
+            $panel = TempPanelIn::create([
                 'barcode_id' => $scanned->id,
                 'brand_id' => $scanned->brand_id,
                 'grade_id' => $request->grade_id,
@@ -115,7 +132,7 @@ class PanelStockInController extends Controller
                 'manufacturing_date' => now(),
             ]);
     
-            return response()->json(['message' => 'Success']);
+            return response()->json(['message' => 'New Record added', 'status' => 'success', 'data' => $panel ], 200);
     
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);

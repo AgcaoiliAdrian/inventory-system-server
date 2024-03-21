@@ -64,12 +64,21 @@ class UserController extends Controller
             $user_info->contact_number = $request->contact_number;
             $user_info->save();
 
+
+            if (!$user_info) {
+                return response()->json(['message' => 'Failed to register user.'], 500);
+            }
+            
             if($user_info){
                 $account = new User();
                 $account->email = $request->email;
                 $temp_password = 'Mega_Plywood2024@';
                 $account->password = Hash::make($temp_password);
                 $account->save();
+
+                if (!$account) {
+                    return response()->json(['message' => 'Email has been already used'], 500);
+                }
     
                 // Send email with temporary passwordn 
                 try {
@@ -84,13 +93,13 @@ class UserController extends Controller
                     $this->mail->Body = 'Your temporary password is: ' . $temp_password;
     
                     $this->mail->send();
-                    return response()->json(['message' => 'User registered successfully. Email sent with temporary password.']);
+                    return response()->json(['message' => 'User registered successfully. Email sent with temporary password.'], 200);
                 } catch (Exception $e) {
-                    return response()->json(['message' => 'User registered successfully. Failed to send email.']);
+                    return response()->json(['message' => 'User registered successfully. Failed to send email.'], 401);
                 }
             }      
         } catch (\Throwable $th) {
-            return response()->json(['error' => $th->getMessage()], 500);
+            return response()->json(['error' => $th->getMessage(), 'message' => "Failed to register user"], 500);
         }
     }
 }

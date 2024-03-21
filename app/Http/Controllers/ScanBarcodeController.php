@@ -11,7 +11,10 @@ class ScanBarcodeController extends Controller
         try {
             $scanned = BarcodeDetails::with(['variant', 'brand'])->find($id);
             
-            return response()->json($scanned);
+
+            if (!$scanned) return response()->json(['message' => 'Barcode scanned is invalid'], 401);
+
+            return  response()->json($scanned, 200);
 
         } catch (\Throwable $th) {
             return response()->json([
