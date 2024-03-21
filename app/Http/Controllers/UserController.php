@@ -72,6 +72,7 @@ class UserController extends Controller
             
             if($user_info){
                 $account = new User();
+                $account -> user_info_id = $user_info -> id;
                 $account->email = $request->email;
                 $temp_password = 'Mega_Plywood2024@';
                 $account->password = Hash::make($temp_password);
@@ -98,7 +99,8 @@ class UserController extends Controller
                 } catch (Exception $e) {
                     return response()->json(['message' => 'User registered successfully. Failed to send email.'], 401);
                 }
-            }      
+            }   
+               
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage(), 'message' => "Failed to register user"], 500);
         }
@@ -107,14 +109,20 @@ class UserController extends Controller
     public function login(Request $request){
         try {
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                $user = Auth::user()->load('info');
+
+                // Check if the password used is the default password
+                if ($request->password === 'Mega_Plywood2024@') {
+                    return response()->json(['message' => 'You are using the default password. Please change it.'], 402);
+                }
+
                 // Authentication successful
-                return response()->json([
-                    'Success',
-                    Auth::user()
-                ]);
-            }          
+                return response()->json($user, 200);
+            }   
+                   
             // Authentication failed
-            return response('Fail');
+            return response()->json(['error' => 'Invalid credentials'], 401);
+            
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }

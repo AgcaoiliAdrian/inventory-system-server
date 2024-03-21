@@ -13,12 +13,10 @@ class GlueTypeController extends Controller
             
             $glue = GlueType::all();
 
-            return response()->json($glue);
+            return response()->json($glue, 200);
             
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th->getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 
@@ -38,17 +36,15 @@ class GlueTypeController extends Controller
             if ($glue->wasRecentlyCreated) {
                 return response()->json([
                     'message' => 'Glue successfully added.'
-                ]);
+                ], 200);
             } else {
                 return response()->json([
                     'message' => 'Glue already exists.'
-                ]);
+                ], 401);
             }
         
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th->getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }      
     }
 
@@ -64,12 +60,10 @@ class GlueTypeController extends Controller
             return response()->json([
                 'message' => 'Success',
                 'data' => $glue
-            ]);
+            ], 200);
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th -> getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 
@@ -77,12 +71,10 @@ class GlueTypeController extends Controller
         try {
             $glue = GlueType::find($id);
 
-            return response()->json($glue);
+            return response()->json($glue, 200);
             
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th -> getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 }

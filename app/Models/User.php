@@ -17,8 +17,11 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    protected $table = 'user_account';
+
     protected $fillable = [
-        // 'name',
+        'user_info_id',
         'email',
         'password',
     ];
@@ -41,4 +44,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function info()
+    {
+        return $this->belongsTo(UserInformation::class, 'user_info_id');
+    }
 }

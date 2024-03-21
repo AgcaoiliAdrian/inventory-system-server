@@ -20,12 +20,10 @@ class PanelStockInController extends Controller
             ->where('panel_stock.status', 'in')
             ->get();        
     
-            return response()->json($data);
+            return response()->json($data, 200);
     
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th->getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }    
 
@@ -77,23 +75,33 @@ class PanelStockInController extends Controller
     }
 
     public function savePanelStockIn(){
-        $temp_panel = TempPanelIn::where('status', 'success')->get();
+        try {
+            $temp_panel = TempPanelIn::where('status', 'success')->get();
 
-        foreach($temp_panel as $data){
-            $barcode = BarcodeDetails::findOrFail($data -> barcode_id);
-            $barcode->update([
-                'glue_type_id' => $data->glue_type_id,
-                'thickness_id' => $data->thickness_id,
-                'grade_id' => $data->grade_id
-            ]);
-
-            $panel = new Panel();
-            $panel -> barcode_id = $data -> barcode_id;
-            $panel -> quantity = 1;
-            $panel -> price = $data -> price;
-            $panel -> manufacturing_date = Carbon::now();
-            $panel -> status = 'in';
-            $panel -> save();
+            foreach($temp_panel as $data){
+                $barcode = BarcodeDetails::findOrFail($data -> barcode_id);
+                $barcode->update([
+                    'glue_type_id' => $data->glue_type_id,
+                    'thickness_id' => $data->thickness_id,
+                    'grade_id' => $data->grade_id
+                ]);
+    
+                $panel = new Panel();
+                $panel -> barcode_id = $data -> barcode_id;
+                $panel -> quantity = 1;
+                $panel -> price = $data -> price;
+                $panel -> manufacturing_date = Carbon::now();
+                $panel -> status = 'in';
+                $panel -> save();
+            }
+    
+            if($panel){
+                TempPanelIn::truncate();
+            }
+    
+            return response('Success', 200);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
         }
 
         if($panel){

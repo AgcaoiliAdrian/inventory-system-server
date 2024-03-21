@@ -19,13 +19,11 @@ class CrateStockOutController extends Controller
                 })
                 ->get();
             
-            return $data;
+            return response()->json($data, 200);
             
             
         } catch (\Throwable $th) {
-           return response()->json([
-                'message' => $th -> getMessage()
-           ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 
@@ -44,12 +42,10 @@ class CrateStockOutController extends Controller
            $temp_batch_out -> batch_number = $batch_number;
            $temp_batch_out -> save();
 
-           return response('Success');
+           return response('Success', 200);
         
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th -> getMessage()
-           ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 
@@ -64,12 +60,10 @@ class CrateStockOutController extends Controller
             // Truncate the TempBatchOut table
             TempBatchOut::truncate();
 
-            return response('Success');
+            return response('Success', 200);
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th -> getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 }

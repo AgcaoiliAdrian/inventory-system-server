@@ -17,12 +17,10 @@ class CrateStockInController extends Controller
         try {
             $details = Brand::with('glue', 'thickness', 'variant', 'grade')->find($id);
 
-            return response()->json($details);
+            return response()->json($details, 200);
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
     
@@ -33,9 +31,7 @@ class CrateStockInController extends Controller
             return response()->json($data);
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 

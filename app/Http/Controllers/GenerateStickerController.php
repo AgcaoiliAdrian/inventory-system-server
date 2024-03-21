@@ -124,6 +124,6 @@ class GenerateStickerController extends Controller
         unlink($imagePathWithBarcode);
     
         // Return success message
-        return "Barcode and Word document with images generated successfully.";
+        return response("Barcode and Word document with images generated successfully.", 200);
     }
 }

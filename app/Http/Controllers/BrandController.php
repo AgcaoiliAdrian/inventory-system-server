@@ -12,12 +12,10 @@ class BrandController extends Controller
         try {
             $brands = Brand::with('variant')->get();
     
-            return response()->json($brands);
+            return response()->json($brands, 200);
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th->getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 
@@ -43,11 +41,10 @@ class BrandController extends Controller
             return response()->json([
                 'message' => 'Brand and variants successfully added.',
                 'data' => $brand
-            ]);
+            ], 200);
+
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th->getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 
@@ -61,12 +58,10 @@ class BrandController extends Controller
             return response()->json([
                 'message' => 'Success',
                 'data' => $brand
-            ]);
+            ], 200);
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th -> getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 
@@ -74,12 +69,10 @@ class BrandController extends Controller
         try {
             $brand = Brand::with('variant')->find($id);
             
-            return response()->json($brand);
+            return response()->json($brand, 200);
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th -> getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }   
 }

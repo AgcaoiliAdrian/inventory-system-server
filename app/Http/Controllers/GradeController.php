@@ -12,12 +12,10 @@ class GradeController extends Controller
             
             $grade = Grade::all();
 
-            return response()->json($grade);
+            return response()->json($grade, 200);
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th -> getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 
@@ -42,7 +40,7 @@ class GradeController extends Controller
             return response()->json([
                 'message' => 'Grade successfully added.',
                 'data' => $grade
-            ]);
+            ], 200);
     
         } catch (\Throwable $th) {
             return response()->json([
@@ -59,10 +57,10 @@ class GradeController extends Controller
             $grade -> updated_at = now();
             $grade -> save();
 
+            return response('Success', 200);
+
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th -> getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 
@@ -70,12 +68,10 @@ class GradeController extends Controller
         try {
             $grade = Grade::find($id);
 
-            return response()->json($grade);
+            return response()->json($grade, 200);
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th -> getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }   
 }

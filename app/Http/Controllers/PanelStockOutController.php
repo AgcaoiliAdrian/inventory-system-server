@@ -20,12 +20,10 @@ class PanelStockOutController extends Controller
             ->where('panel_stock.status', 'out')
             ->get();        
     
-            return response()->json($data);
+            return response()->json($data, 200);
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th -> getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 
@@ -45,12 +43,10 @@ class PanelStockOutController extends Controller
         $temp_out -> panel_stock_id = $panel;
         $temp_out -> save();
 
-        return response('Success');
+        return response('Success', 200);
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th -> getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 
