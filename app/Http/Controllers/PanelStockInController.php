@@ -95,21 +95,17 @@ class PanelStockInController extends Controller
                 $panel -> save();
             }
     
+          
             if($panel){
                 TempPanelIn::truncate();
+                return response()->json(['message' => 'Panel stocked in succesfully saved'], 200);
             }
-    
-            return response('Success', 200);
+
+            return response()->json(['message' => 'Failed to save panel stock in'], 401);
+
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
-
-        if($panel){
-            TempPanelIn::truncate();
-            return  response()->json(['message' => 'Panel stock in succesfully saved'], 200);
-        }
-
-        return response()->json(['message' => 'Failed to saved panel stock in'], 401);
 
        
     }
@@ -124,10 +120,10 @@ class PanelStockInController extends Controller
             $status = 'success';
     
             // Check if brand_id and variant_id are the same
-            if ($previous_data && ($previous_data->brand_id != $scanned->brand_id || $previous_data->variant_id != $scanned->variant_id)) {
-                // If not the same, set status to 'Failed'
-                $status = 'failed';
-            }
+            // if ($previous_data ) {
+            //     // If not the same, set status to 'Failed'
+            //     $status = 'failed';
+            // }
     
             // Save the new data with the determined status
             $panel = TempPanelIn::create([
