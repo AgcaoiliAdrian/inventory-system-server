@@ -5,9 +5,30 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TempPanelOut;
 use App\Models\Panel;
+use App\Models\BarcodeDetails;
 
 class PanelStockOutController extends Controller
 {
+
+    public function index(Request $request){
+        try {
+            $data = BarcodeDetails::with(['variant', 'brand', 'thickness', 'grade'])
+            ->join('panel_stock', 'barcode_details.id', '=', 'panel_stock.barcode_id')
+            ->whereIn('barcode_details.id', function ($query) {
+                $query->select('barcode_id')->from('panel_stock');
+            })
+            ->where('panel_stock.status', 'out')
+            ->get();        
+    
+            return response()->json($data);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th -> getMessage()
+            ]);
+        }
+    }
+
     public function tempPanelStockOut($id, Request $request){
         try {
 

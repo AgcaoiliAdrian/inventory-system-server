@@ -17,7 +17,8 @@ class PanelStockInController extends Controller
             ->whereIn('barcode_details.id', function ($query) {
                 $query->select('barcode_id')->from('panel_stock');
             })
-            ->get();
+            ->where('panel_stock.status', 'in')
+            ->get();        
     
             return response()->json($data);
     
@@ -76,7 +77,7 @@ class PanelStockInController extends Controller
     }
 
     public function savePanelStockIn(){
-        $temp_panel = TempPanelIn::select('*')->get();
+        $temp_panel = TempPanelIn::where('status', 'success')->get();
 
         foreach($temp_panel as $data){
             $barcode = BarcodeDetails::findOrFail($data -> barcode_id);
@@ -109,15 +110,16 @@ class PanelStockInController extends Controller
         try {
             
             $scanned = BarcodeDetails::findOrFail($id);
+            $previous_data = TempPanelIn::first();
 
             // Initialize status with 'Success'
-            // $status = 'success';
+            $status = 'success';
     
             // Check if brand_id and variant_id are the same
-            // if ($previous_data && ($previous_data->brand_id != $scanned->brand_id || $previous_data->variant_id != $scanned->variant_id)) {
-            //     // If not the same, set status to 'Failed'
-            //     $status = 'failed';
-            // }
+            if ($previous_data && ($previous_data->brand_id != $scanned->brand_id || $previous_data->variant_id != $scanned->variant_id)) {
+                // If not the same, set status to 'Failed'
+                $status = 'failed';
+            }
     
             // Save the new data with the determined status
             $panel = TempPanelIn::create([
@@ -130,9 +132,10 @@ class PanelStockInController extends Controller
                 'quantity' => 1,
                 'price' => $request->price,
                 'manufacturing_date' => now(),
+                'status' => $status
             ]);
     
-            return response()->json(['message' => 'New Record added', 'status' => 'success', 'data' => $panel ], 200);
+            return response()->json(['message' => 'Success']);
     
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);
