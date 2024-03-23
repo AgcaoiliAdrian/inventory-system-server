@@ -14,15 +14,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::namespace('App\Http\Controllers')->group(function () {
 
-    Route::namespace('App\Http\Controllers')->group(function () {
+    //User Login and Registration
+    Route::post('/register', 'UserController@register');
+    Route::post('/login', 'UserController@login');
+    Route::post('/generate', 'GenerateStickerController@generate');
+    Route::get('/materials', 'MaterialSuppliedController@index');
+    Route::post('/materials', 'MaterialSuppliedController@store');
 
-        //User Login and Registration
-        Route::post('/register', 'UserController@register');
-        Route::post('/login', 'UserController@login');
+
+    // Protected routes that require authentication
+    Route::middleware(['auth:sanctum'])->group(function () {
 
         //Brand Endpoint
         Route::get('/brand', 'BrandController@index');
@@ -85,5 +88,11 @@ use Illuminate\Support\Facades\Route;
         Route::post('/stock-out/{id}', 'StockOutController@stockOut');
 
         //Generate Sticker
-        Route::post('/generate', 'GenerateStickerController@generate');
+        // Route::post('/generate', 'GenerateStickerController@generate');
     });
+
+    // Catch-all route for unauthorized requests
+    Route::fallback(function () {
+        return response()->json(['message' => 'Unauthorized.'], 401);
+    });
+});

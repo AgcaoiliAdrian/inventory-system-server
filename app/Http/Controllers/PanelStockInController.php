@@ -68,9 +68,7 @@ class PanelStockInController extends Controller
             return response('Success');
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th -> getMessage()
-            ]);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 

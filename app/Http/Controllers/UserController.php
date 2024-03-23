@@ -8,6 +8,7 @@ use PHPMailer\PHPMailer\OAuth;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -109,27 +110,27 @@ class UserController extends Controller
     public function login(Request $request)
     {
         try {
+            // Attempt to authenticate the user
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                // Retrieve the authenticated user
                 $user = Auth::user()->load('info');
-
-                // Check if the password used is the default password
-                if ($user->password === 'Mega_Plywood2024@') {
-                    // Update the password
-                    $this->updatePassword($user, $request->new_password);
-
-                    return response()->json(['message' => 'You are using the default password. Password updated successfully.'], 200);
-                }
-
-                // Authentication successful
-                return response()->json(['message' => 'Logged in', 'data' => $user], 200);
+    
+                // Generate a personal access token for the user
+                $token = $user->createToken('Personal Access Token')->plainTextToken;
+    
+                // Return the token along with user data
+                return response()->json(['token' => $token, 'user' => $user], 200);
             }
-
+    
             // Authentication failed
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);
         }
     }
+    
 
     private function updatePassword($user, $newPassword)
     {
