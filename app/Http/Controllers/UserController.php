@@ -121,13 +121,13 @@ class UserController extends Controller
                 }
 
                 // Authentication successful
-                return response()->json($user, 200);
+                return response()->json(['message' => 'Logged in', 'data' => $user], 200);
             }
 
             // Authentication failed
-            return response()->json(['error' => 'Invalid credentials'], 401);
+            return response()->json(['message' => 'Invalid credentials'], 401);
         } catch (\Throwable $th) {
-            return response()->json(['error' => $th->getMessage()], 500);
+            return response()->json(['message' => $th->getMessage()], 500);
         }
     }
 
