@@ -9,6 +9,23 @@ use App\Models\BarcodeDetails;
 
 class CrateStockOutController extends Controller
 {
+    public function index(Request $request){
+        try {
+            $data = BarcodeDetails::with(['variant', 'brand', 'thickness', 'grade'])
+            ->join('crate_stock', 'barcode_details.id', '=', 'crate_stock.barcode_id')
+            ->whereIn('barcode_details.id', function ($query) {
+                $query->select('barcode_id')->from('crate_stock');
+            })
+            ->where('crate_stock.status', 'out')
+            ->get();        
+    
+            return response()->json($data, 200);
+
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
     public function IndexTempBatchOut(){
         try {
             $data = BarcodeDetails::with(['variant', 'brand', 'thickness', 'grade'])

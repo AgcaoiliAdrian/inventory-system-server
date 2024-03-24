@@ -19,10 +19,6 @@ Route::namespace('App\Http\Controllers')->group(function () {
     //User Login and Registration
     Route::post('/register', 'UserController@register');
     Route::post('/login', 'UserController@login');
-    Route::post('/generate', 'GenerateStickerController@generate');
-    Route::get('/materials', 'MaterialSuppliedController@index');
-    Route::post('/materials', 'MaterialSuppliedController@store');
-
 
     // Protected routes that require authentication
     // Route::middleware(['auth:sanctum'])->group(function () {
@@ -61,12 +57,14 @@ Route::namespace('App\Http\Controllers')->group(function () {
         Route::get('/scanned/{id}', 'ScanBarcodeController@show');
 
         //Crate Endpoint --- Stock-In
+        Route::get('/crate-in', 'CrateStockInController@index');
         Route::get('/crate-in/{id}', 'CrateStockInController@show');
         Route::post('/crate-in/{id}', 'CrateStockInController@tempBatchStockIn'); // This API is for storing temporarily the scanned barcode by batch stack-in
         Route::post('/crate-in', 'CrateStockInController@saveBatchStockIn'); //This API is for saving temporary batch stock-in
         Route::get('/crate-in-temp', 'CrateStockInController@IndexTempBatchIn'); //Get all the temporary stock-in
 
         //Crate Endpoint --- Stock-Out
+        Route::get('/crate-out', 'CrateStockOutController@index'); //Get All the crates with status out
         Route::post('/crate-out/{id}', 'CrateStockOutController@tempBatchStockOut'); //This API is for storing temporarily the scanned barcode by batch stock-out
         Route::post('/crate-out', 'CrateStockOutController@saveBatchStockOut'); //This API is for saving temporary batch stock-out
         Route::get('/crate-out-temp', 'CrateStockOutController@IndexTempBatchOut'); //Get all the temporary stock-out 
@@ -87,8 +85,19 @@ Route::namespace('App\Http\Controllers')->group(function () {
         Route::get('/stock-out', 'StockOutController@index');
         Route::post('/stock-out/{id}', 'StockOutController@stockOut');
 
+        //Supplier End Points
+        Route::get('/materials', 'MaterialSuppliedController@index');
+        Route::post('/materials', 'MaterialSuppliedController@store');
+    
+        //Dashboard End Points
+        Route::get('/stocks', 'DashboardController@stocksData'); // Get stocks data
+        Route::get('/top-selling', 'DashboardController@topSelling'); // Top Selling data
+        Route::get('/revenue', 'DashboardController@revenue'); //revenue data
+        Route::get('/sticker-usage', 'DashboardController@stickerUsage'); //sticker usage data
+
         //Generate Sticker
-        // Route::post('/generate', 'GenerateStickerController@generate');
+        Route::post('/generate', 'GenerateStickerController@generate');
+        
     // });
 
     // Catch-all route for unauthorized requests

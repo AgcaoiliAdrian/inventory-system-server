@@ -18,4 +18,10 @@ class GlueType extends Model
         'brand'
     ];
     public $timestamps = TRUE;
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id');
+    }
+
 }
