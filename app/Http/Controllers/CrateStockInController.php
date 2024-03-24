@@ -103,7 +103,7 @@ class CrateStockInController extends Controller
                 }
             }
         
-            return response('Success');
+            return response()->json(['message' => 'Success', ], 200);
     
         } catch (\Throwable $th) {
             return response()->json([

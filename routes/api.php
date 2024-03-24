@@ -25,7 +25,7 @@ Route::namespace('App\Http\Controllers')->group(function () {
 
 
     // Protected routes that require authentication
-    Route::middleware(['auth:sanctum'])->group(function () {
+    // Route::middleware(['auth:sanctum'])->group(function () {
 
         //Brand Endpoint
         Route::get('/brand', 'BrandController@index');
@@ -89,7 +89,7 @@ Route::namespace('App\Http\Controllers')->group(function () {
 
         //Generate Sticker
         // Route::post('/generate', 'GenerateStickerController@generate');
-    });
+    // });
 
     // Catch-all route for unauthorized requests
     Route::fallback(function () {

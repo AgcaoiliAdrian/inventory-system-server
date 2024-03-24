@@ -19,14 +19,14 @@ class VariantSeeder extends Seeder
 
         Variant::create([
             'brand_id' => 2,
-            'variant_name' => "ZAMBOA-MARINE",
+            'variant_name' => "GENUINE MARINE",
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
         Variant::create([
             'brand_id' => 2,
-            'variant_name' => "ZAMBOA-ORDINARY",
+            'variant_name' => "ORDINARY",
             'created_at' => now(),
             'updated_at' => now()
         ]);
