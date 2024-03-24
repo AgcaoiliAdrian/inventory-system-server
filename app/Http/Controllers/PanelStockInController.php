@@ -104,8 +104,6 @@ class PanelStockInController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
-
-       
     }
 
     public function tempPanelStockIn($id, Request $request){
@@ -141,6 +139,17 @@ class PanelStockInController extends Controller
     
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);
+        }
+    }
+
+    public function delete($id){
+        try {
+            $brand = TempPanelIn::find($id)->delete();
+
+            return response('Success', 200);
+            
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 }

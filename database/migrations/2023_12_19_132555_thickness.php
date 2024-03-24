@@ -19,6 +19,7 @@ class Thickness extends Migration
             $table->string('value');
             $table->string('unit');
             
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -31,5 +32,6 @@ class Thickness extends Migration
     public function down()
     {
         Schema::dropIfExists('thickness');
+
     }
 }

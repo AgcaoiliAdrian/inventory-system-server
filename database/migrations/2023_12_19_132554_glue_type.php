@@ -19,6 +19,7 @@ class GlueType extends Migration
             $table->string('type');
             $table->string('brand');
             
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -31,5 +32,6 @@ class GlueType extends Migration
     public function down()
     {
         Schema::dropIfExists('glue_type');
+
     }
 }

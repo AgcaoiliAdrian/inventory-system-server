@@ -103,6 +103,15 @@ class PanelStockOutController extends Controller
             ]);
         }
     }
+
+    public function delete($id){
+        try {
+            $brand = TempPanelOut::find($id)->delete();
+
+            return response('Success', 200);
+            
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
 }
-
-

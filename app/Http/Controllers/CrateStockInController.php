@@ -135,5 +135,16 @@ class CrateStockInController extends Controller
                 'message' => $th->getMessage()
             ], 500);
         }
-    }        
+    }  
+    
+    public function delete($id){
+        try {
+            $brand = TempBatchIn::find($id)->delete();
+
+            return response('Success', 200);
+            
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
 }

@@ -17,6 +17,8 @@ class Brand extends Migration
             $table->increments('id');
             $table->string('brand_name');
             
+            // Add soft deletes directly within the create() method
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -28,6 +30,7 @@ class Brand extends Migration
      */
     public function down()
     {
+        // Drop the table if rolling back the migration
         Schema::dropIfExists('brands');
     }
 }
