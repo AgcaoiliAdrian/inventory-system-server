@@ -32,4 +32,9 @@ class Panel extends Model
     {
         return $this->belongsTo(Grade::class, 'grade_id')->select('id', 'grading');
     }
+
+    public function barcode()
+    {
+        return $this->belongsTo(BarcodeDetails::class, 'barcode_id')->select('id', 'brand_id', 'variant_id', 'thickness_id', 'barcode_number');
+    }
 }

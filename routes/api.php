@@ -87,6 +87,7 @@ Route::namespace('App\Http\Controllers')->group(function () {
         Route::post('/panel-out/{id}', 'PanelStockOutController@tempPanelStockOut');
         Route::post('/panel-out', 'PanelStockOutController@savePanelStockOut');
         Route::delete('/panel-out/{id}', 'PanelStockOutController@delete');
+        Route::get('/panel-out-temp', 'PanelStockOutController@IndexTempPanelOut'); //Get all the temporary stock-out 
         
         //Stock Out Endpoint
         Route::get('/stock-out', 'StockOutController@index');

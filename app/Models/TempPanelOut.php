@@ -17,4 +17,9 @@ class TempPanelOut extends Model
     ];
 
     public $timestamps = TRUE;
+
+    public function panelStock() {
+        return $this->belongsTo(Panel::class, 'panel_stock_id', 'id');
+    }
+    
 }

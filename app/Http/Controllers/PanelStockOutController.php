@@ -104,6 +104,34 @@ class PanelStockOutController extends Controller
         }
     }
 
+    public function IndexTempPanelOut(){
+        try {
+            $data = TempPanelOut::with(['panelStock.barcodeDetails'])->get();  
+            
+            $details = BarcodeDetails::with(['brand', 'variant', 'thickness', 'grade', 'glue'])->get();
+            
+            $filteredDetails = [];
+    
+            foreach ($data as $item) {
+                $barcodeId = $item->panel_stock_id;
+                
+                // Filter details based on barcode_id
+                $filteredDetail = $details->where('id', $barcodeId)->first();
+                
+                if ($filteredDetail) {
+                    $filteredDetails[] = $filteredDetail;
+                }
+            }
+    
+            return response()->json($filteredDetails);
+    
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage()
+            ]);
+        }
+    }    
+
     public function delete($id){
         try {
             $brand = TempPanelOut::find($id)->delete();
