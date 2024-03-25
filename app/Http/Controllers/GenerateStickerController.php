@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 use App\Models\BarcodeDetails;
 use App\Helpers\Helpers;
@@ -57,6 +59,7 @@ class GenerateStickerController extends Controller
 
         foreach ($stored_ids as $stored_id) {
             // Get barcode image for each stored ID
+            $foregroundColor = ['r' => 0, 'g' => 0, 'b' => 0];
             $barcodeImages[] = $generator->getBarcode($stored_id, $generator::TYPE_CODE_128, 18, 600);
         }
 
@@ -75,7 +78,7 @@ class GenerateStickerController extends Controller
             $barcodeHeight = imagesy($barcodeImageResource);
 
             // Calculate position to attach barcode
-            $x = 80; // Adjust as needed
+            $x = 800; // Adjust as needed
             $y = 2730; // Adjust as needed
 
             // Attach barcode to existing image
@@ -111,14 +114,16 @@ class GenerateStickerController extends Controller
         }
 
         // Save the Word document with a unique filename
-        $wordDocsPath = public_path('/word-docs');
-        if (!is_dir($wordDocsPath)) {
-            mkdir($wordDocsPath, 0755, true);
-        }
+        // $wordDocsPath = public_path('/word-docs');
+        // if (!is_dir($wordDocsPath)) {
+        //     mkdir($wordDocsPath, 0755, true);
+        // }
 
         $DATE = Carbon::now()->format('Y-m-d-h');
+        $fileName = $request->brand . '-' . $DATE . '.docx';
+        $filePath = tempnam(sys_get_temp_dir(), 'word_doc_');
         $document = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-        $document->save($wordDocsPath . '/' . $request->brand . '-' . $DATE . '.docx');
+        $document->save($filePath);
 
         // Clean up generated barcode images
         foreach ($barcodeImagePaths as $imagePathWithBarcode) {
@@ -126,7 +131,7 @@ class GenerateStickerController extends Controller
         }
 
         // Return success message
-        return "Barcode and Word document with images generated successfully.";
+        return Response::download($filePath, $fileName)->deleteFileAfterSend(false);
     }
 
     private function createBarcodeDetails(Request $request, $barcode_number)
