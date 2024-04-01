@@ -17,13 +17,10 @@ class TempPanelIn extends Model
     public $fillable = [
         'barcode_id',
         'grade_id',
-        'glue_type_id',
-        'thickness_id',
         'brand_id',
         'variant_id',
         'manufacturing_date',
         'quantity',
-        'price',
         'status'
     ];
 
@@ -39,16 +36,6 @@ class TempPanelIn extends Model
         return $this->belongsTo(Variant::class, 'variant_id')->select('id', 'variant_name');
     }
 
-    public function thickness()
-    {
-        return $this->belongsTo(Thickness::class, 'thickness_id')->select('id', 'value', 'unit');
-    }
-
-    public function glue()
-    {
-        return $this->belongsTo(GlueType::class, 'glue_type_id')->select('id', 'type', 'brand');
-    }
-
     public function grade()
     {
         return $this->belongsTo(Grade::class)->select('id', 'grading');
@@ -56,6 +43,6 @@ class TempPanelIn extends Model
 
     public function barcode()
     {
-        return $this->belongsTo(BarcodeDetails::class)->select('id', 'barcode_number');
+        return $this->belongsTo(BarcodeDetails::class)->select('id', 'barcode_number', 'thickness_id', 'glue_type_id');
     }
 }

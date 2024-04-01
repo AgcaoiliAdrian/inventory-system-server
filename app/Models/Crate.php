@@ -16,7 +16,6 @@ class Crate extends Model
         'grade_id',
         'manufacturing_date',
         'quantity',
-        'price',
         'batch_number'
     ];
 

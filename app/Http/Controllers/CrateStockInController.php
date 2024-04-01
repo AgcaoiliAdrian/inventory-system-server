@@ -15,20 +15,24 @@ class CrateStockInController extends Controller
 {
     public function index(){
         try {
-            $data = BarcodeDetails::with(['variant', 'brand', 'thickness', 'grade'])
-            ->join('crate_stock', 'barcode_details.id', '=', 'crate_stock.barcode_id')
-            ->whereIn('barcode_details.id', function ($query) {
-                $query->select('barcode_id')->from('crate_stock');
-            })
-            ->where('crate_stock.status', 'in')
-            ->get();        
+            $data = BarcodeDetails::with(['variant', 'brand', 'thickness', 'glue', 'grade'])
+                ->join('crate_stock', 'barcode_details.id', '=', 'crate_stock.barcode_id')
+                ->whereIn('barcode_details.id', function ($query) {
+                    $query->select('barcode_id')->from('crate_stock');
+                })
+                ->where('crate_stock.status', 'in')
+                ->select('brand_id', 'variant_id', 'thickness_id', 'glue_type_id', 'grade_id',
+                 'manufacturing_date', 'batch_number', 'status', 'crate_stock.created_at') // Select all columns from barcode_details
+                ->distinct('batch_number') // Select distinct based on these columns
+                ->get();        
     
             return response()->json($data, 200);
     
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
-    }
+    }     
+      
 
     public function show($id, Request $request){
         try {
@@ -43,7 +47,7 @@ class CrateStockInController extends Controller
     
     public function IndexTempBatchIn(){
         try {
-            $data = TempBatchIn::with(['brand', 'variant', 'thickness', 'grade', 'glue', 'barcode'])->get();
+            $data = TempBatchIn::with(['brand', 'variant', 'grade', 'barcode'])->get();
 
             return response()->json($data);
 
@@ -80,10 +84,7 @@ class CrateStockInController extends Controller
                     'brand_id' => $scanned->brand_id,
                     'grade_id' => $request->grade_id,
                     'variant_id' => $scanned->variant_id,
-                    'glue_type_id' => $request->glue_type_id,
-                    'thickness_id' => $request->thickness_id,
                     'quantity' => 1,
-                    'price' => $request->price,
                     'manufacturing_date' => now(),
                     'status' => $status,
                 ]);
@@ -108,8 +109,6 @@ class CrateStockInController extends Controller
             foreach ($batch_in as $data){
                 $barcode = BarcodeDetails::findOrFail($data -> barcode_id);
                 $barcode->update([
-                    'glue_type_id' => $data->glue_type_id,
-                    'thickness_id' => $data->thickness_id,
                     'grade_id' => $data->grade_id
                 ]);
     
@@ -117,7 +116,6 @@ class CrateStockInController extends Controller
                 $crate_stock -> barcode_id = $data -> barcode_id;
                 // $crate_stock -> grade_id = $data -> grade_id;
                 $crate_stock -> quantity = 1;
-                $crate_stock -> price = $data -> price;
                 $crate_stock -> manufacturing_date =  Carbon::now();
                 $crate_stock -> batch_number = $batch_number;
                 $crate_stock -> status = 'in';

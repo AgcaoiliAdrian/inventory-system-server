@@ -9,18 +9,21 @@ use App\Models\BarcodeDetails;
 
 class CrateStockOutController extends Controller
 {
-    public function index(Request $request){
+    public function index(){
         try {
-            $data = BarcodeDetails::with(['variant', 'brand', 'thickness', 'grade'])
-            ->join('crate_stock', 'barcode_details.id', '=', 'crate_stock.barcode_id')
-            ->whereIn('barcode_details.id', function ($query) {
-                $query->select('barcode_id')->from('crate_stock');
-            })
-            ->where('crate_stock.status', 'out')
-            ->get();        
+            $data = BarcodeDetails::with(['variant', 'brand', 'thickness', 'glue', 'grade'])
+                ->join('crate_stock', 'barcode_details.id', '=', 'crate_stock.barcode_id')
+                ->whereIn('barcode_details.id', function ($query) {
+                    $query->select('barcode_id')->from('crate_stock');
+                })
+                ->where('crate_stock.status', 'out')
+                ->select('brand_id', 'variant_id', 'thickness_id', 'glue_type_id', 'grade_id',
+                 'manufacturing_date', 'batch_number', 'status', 'crate_stock.created_at') // Select all columns from barcode_details
+                ->distinct('batch_number') // Select distinct based on these columns
+                ->get();        
     
             return response()->json($data, 200);
-
+    
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
@@ -87,6 +90,14 @@ class CrateStockOutController extends Controller
 
             return response('Success', 200);
 
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function insertOne(Request $request){
+        try {
+           
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }

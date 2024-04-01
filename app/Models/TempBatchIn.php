@@ -17,13 +17,10 @@ class TempBatchIn extends Model
     public $fillable = [
         'barcode_id',
         'grade_id',
-        'glue_type_id',
-        'thickness_id',
         'brand_id',
         'variant_id',
         'manufacturing_date',
         'quantity',
-        'price',
         'status'
     ];
 
@@ -56,6 +53,6 @@ class TempBatchIn extends Model
 
     public function barcode()
     {
-        return $this->belongsTo(BarcodeDetails::class)->select('id', 'barcode_number');
+        return $this->belongsTo(BarcodeDetails::class)->select('id', 'barcode_number', 'thickness_id', 'glue_type_id');
     }
 }

@@ -29,16 +29,16 @@ class PanelStockInController extends Controller
 
     public function IndexTempPanelIn(){
         try {
-            $data = TempPanelIn::with(['brand', 'variant', 'thickness', 'grade', 'glue', 'barcode'])->get();
-
+            $data = TempPanelIn::with(['brand', 'variant', 'grade', 'barcode.thickness', 'barcode.glue'])->get();
+    
             return response()->json($data);
-
+    
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => $th
             ]);
         }
-    }
+    }              
 
     public function panelStockIn($id, Request $request){
         try {
@@ -79,15 +79,12 @@ class PanelStockInController extends Controller
             foreach($temp_panel as $data){
                 $barcode = BarcodeDetails::findOrFail($data -> barcode_id);
                 $barcode->update([
-                    'glue_type_id' => $data->glue_type_id,
-                    'thickness_id' => $data->thickness_id,
                     'grade_id' => $data->grade_id
                 ]);
     
                 $panel = new Panel();
                 $panel -> barcode_id = $data -> barcode_id;
                 $panel -> quantity = 1;
-                $panel -> price = $data -> price;
                 $panel -> manufacturing_date = Carbon::now();
                 $panel -> status = 'in';
                 $panel -> save();
@@ -127,8 +124,6 @@ class PanelStockInController extends Controller
                 'brand_id' => $scanned->brand_id,
                 'grade_id' => $request->grade_id,
                 'variant_id' => $scanned->variant_id,
-                'glue_type_id' => $request->glue_type_id,
-                'thickness_id' => $request->thickness_id,
                 'quantity' => 1,
                 'price' => $request->price,
                 'manufacturing_date' => now(),
