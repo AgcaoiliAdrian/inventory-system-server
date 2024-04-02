@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Models\BarcodeDetails;
+use App\Models\GlueType;
+use App\Models\Thickness;
 use App\Helpers\Helpers;
 
 use Carbon\Carbon;
@@ -58,7 +60,7 @@ class GenerateStickerController extends Controller
 
             // Generate barcode
             $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-            $barcodeImage = $generator->getBarcode($barcode_number, $generator::TYPE_CODE_128, 8.5, 600);
+            $barcodeImage = $generator->getBarcode($barcode_number, $generator::TYPE_CODE_128, 10.9, 550);
         }       
     
         // Get the image filename from the request
@@ -83,11 +85,45 @@ class GenerateStickerController extends Controller
         $barcodeHeight = imagesy($barcodeImageResource);
     
         // Calculate position to attach barcode
-        $x = 80; // Adjust as needed
-        $y = 2730; // Adjust as needed
+        $x = 660; // Adjust as needed
+        $y = 2790; // Adjust as needed
     
+       // Specify the path to your font file
+        $textFont = public_path('/fonts/impact.ttf');
+
+        $thickness = Thickness::select('value')->where('id', $request->thickness_id)->get();
+        $glue = GlueType::select('type')->where('id', $request->glue_type_id)->get();
+
+        foreach($glue as $a){
+            $glue_type = $a->type;
+        }
+
+        foreach($thickness as $b){
+            $thickness_value = $b->value;
+        }
+
         // Attach barcode to existing image
         imagecopy($existingImage, $barcodeImageResource, $x, $y, 0, 0, $barcodeWidth, $barcodeHeight);
+
+        // Define text contents
+        $text1 = "THICKNESS";
+        $text2 = "TYPE";
+        $text3 = $thickness_value . " MM";
+        $text4 = "TYPE " . $glue_type;
+
+        // Set font size for all texts
+        $font_size = 80; // Adjust font size here
+
+        // Set vertical spacing between texts
+        $vertical_spacing = 20;
+
+        // Add text below the barcode
+        $textColor = imagecolorallocate($existingImage, 0, 0, 0); // Black color
+        imagettftext($existingImage, $font_size, 0, 110, 2300 + $barcodeHeight + $vertical_spacing, $textColor, $textFont, $text1);
+        imagettftext($existingImage, $font_size, 0, 2050, 2300 + $barcodeHeight + 2 * $vertical_spacing, $textColor, $textFont, $text2);
+        imagettftext($existingImage, $font_size, 0, 180, 2750 + $barcodeHeight + 3 * $vertical_spacing, $textColor, $textFont, $text3);
+        imagettftext($existingImage, $font_size, 0, 2045, 2750 + $barcodeHeight + 4 * $vertical_spacing, $textColor, $textFont, $text4);
+
     
         // Clean up
         imagedestroy($barcodeImageResource);
