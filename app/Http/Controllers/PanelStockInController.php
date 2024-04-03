@@ -103,10 +103,10 @@ class PanelStockInController extends Controller
         }
     }
 
-    public function tempPanelStockIn($id, Request $request){
+    public function tempPanelStockIn($barcode, Request $request){
         try {
             
-            $scanned = BarcodeDetails::findOrFail($id);
+            $scanned = BarcodeDetails::where('barcode_number', $barcode)->first();
             $previous_data = TempPanelIn::first();
 
             // Initialize status with 'Success'

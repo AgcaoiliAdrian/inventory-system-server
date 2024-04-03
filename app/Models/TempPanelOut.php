@@ -22,4 +22,7 @@ class TempPanelOut extends Model
         return $this->belongsTo(Panel::class, 'panel_stock_id', 'id');
     }
     
+    public function crateStock() {
+        return $this->belongsTo(Crate::class, 'crate_stock_id', 'id');
+    }
 }

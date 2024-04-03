@@ -28,14 +28,15 @@ class PanelStockOutController extends Controller
         }
     }
 
-    public function tempPanelStockOut($id, Request $request) {
+    public function tempPanelStockOut($barcode, Request $request) {
         try {
             // Check if a panel with the provided barcode_id exists
-            $panel = Panel::where('barcode_id', $id)->first();
+            $scanned = BarcodeDetails::where('barcode_number', $barcode)->first();
+            $panel = Panel::where('barcode_id', $scanned->id)->first();
     
             if (!$panel) {
                 // If no panel is found, check if a crate with the provided barcode_id exists
-                $crate = Crate::where('barcode_id', $id)->first();
+                $crate = Crate::where('barcode_id', $scanned->id)->first();
     
                 if (!$crate) {
                     // If neither panel nor crate is found, return an error response
@@ -106,20 +107,26 @@ class PanelStockOutController extends Controller
 
     public function IndexTempPanelOut(){
         try {
-            $data = TempPanelOut::with(['panelStock.barcodeDetails'])->get();  
+            $data = TempPanelOut::with(['panelStock.barcodeDetails', 'crateStock.barcodeDetails'])->get();  
+    
             
             $details = BarcodeDetails::with(['brand', 'variant', 'thickness', 'grade', 'glue'])->get();
             
             $filteredDetails = [];
-    
+            
             foreach ($data as $item) {
-                $barcodeId = $item->panel_stock_id;
+                $panelbarcodeId = $item->panel_stock_id;
+                $crateBarcodeId = $item->crate_stock_id;
                 
                 // Filter details based on barcode_id
-                $filteredDetail = $details->where('id', $barcodeId)->first();
+                $filteredPanel = $details->where('id', $panelbarcodeId)->first();
+                $filteredCrate = $details->where('id', $crateBarcodeId)->first();
                 
-                if ($filteredDetail) {
-                    $filteredDetails[] = $filteredDetail;
+                if ($filteredPanel) {
+                    $filteredDetails[] = $filteredPanel;
+                }
+                if ($filteredCrate) {
+                    $filteredDetails[] = $filteredCrate;
                 }
             }
     
@@ -131,6 +138,7 @@ class PanelStockOutController extends Controller
             ]);
         }
     }    
+      
 
     public function delete($id){
         try {

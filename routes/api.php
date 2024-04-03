@@ -61,15 +61,15 @@ Route::namespace('App\Http\Controllers')->group(function () {
 
         //Crate Endpoint --- Stock-In
         Route::get('/crate-in', 'CrateStockInController@index');
-        Route::get('/crate-in/{id}', 'CrateStockInController@show');
-        Route::post('/crate-in/{id}', 'CrateStockInController@tempBatchStockIn'); // This API is for storing temporarily the scanned barcode by batch stack-in
+        Route::get('/crate-in/{barcode}', 'CrateStockInController@show');
+        Route::post('/crate-in/{barcode}', 'CrateStockInController@tempBatchStockIn'); // This API is for storing temporarily the scanned barcode by batch stack-in
         Route::post('/crate-in', 'CrateStockInController@saveBatchStockIn'); //This API is for saving temporary batch stock-in
         Route::get('/crate-in-temp', 'CrateStockInController@IndexTempBatchIn'); //Get all the temporary stock-in
         Route::delete('/crate-in-temp/{id}', 'CrateStockInController@delete'); //Get all the temporary stock-in
 
         //Crate Endpoint --- Stock-Out
         Route::get('/crate-out', 'CrateStockOutController@index'); //Get All the crates with status out
-        Route::post('/crate-out/{id}', 'CrateStockOutController@tempBatchStockOut'); //This API is for storing temporarily the scanned barcode by batch stock-out
+        Route::post('/crate-out/{barcode}', 'CrateStockOutController@tempBatchStockOut'); //This API is for storing temporarily the scanned barcode by batch stock-out
         Route::post('/crate-out', 'CrateStockOutController@saveBatchStockOut'); //This API is for saving temporary batch stock-out
         Route::get('/crate-out-temp', 'CrateStockOutController@IndexTempBatchOut'); //Get all the temporary stock-out 
         Route::delete('/crate-out-temp/{id}', 'CrateStockOutController@delete'); //Get all the temporary stock-out 
@@ -77,14 +77,14 @@ Route::namespace('App\Http\Controllers')->group(function () {
         //Panel Endpoint --- Stock In
         // Route::post('/panel/{id}', 'PanelStockInController@panelStockIn');
         Route::get('/panel-in', 'PanelStockInController@index');//Get All the panels with status in
-        Route::post('/panel-in/{id}', 'PanelStockInController@tempPanelStockIn'); //
+        Route::post('/panel-in/{barcode}', 'PanelStockInController@tempPanelStockIn'); //
         Route::post('/panel-in', 'PanelStockInController@savePanelStockIn');
         Route::get('/panel-in-temp', 'PanelStockInController@IndexTempPanelIn'); //Get all the temporary stock-out 
         Route::delete('/panel-in-temp/{id}', 'PanelStockInController@delete'); //Get all the temporary stock-out 
 
         //Panel Endpoint --- Stock Out
         Route::get('/panel-out', 'PanelStockOutController@index'); //Get All the panels with status out
-        Route::post('/panel-out/{id}', 'PanelStockOutController@tempPanelStockOut');
+        Route::post('/panel-out/{barcode}', 'PanelStockOutController@tempPanelStockOut');
         Route::post('/panel-out', 'PanelStockOutController@savePanelStockOut');
         Route::delete('/panel-out/{id}', 'PanelStockOutController@delete');
         Route::get('/panel-out-temp', 'PanelStockOutController@IndexTempPanelOut'); //Get all the temporary stock-out 

@@ -47,9 +47,11 @@ class CrateStockOutController extends Controller
         }
     }
 
-    public function tempBatchStockOut($id, Request $request){
+    public function tempBatchStockOut($barcode, Request $request){
         try {
-            $batch_number = Crate::where('barcode_id', $id)->pluck('batch_number')->first();
+            $scanned = BarcodeDetails::where('barcode_number', $barcode)->first();
+
+            $batch_number = Crate::where('barcode_id', $scanned->id)->pluck('batch_number')->first();
 
             if (!$batch_number) {
                 return response()->json([

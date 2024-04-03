@@ -34,9 +34,9 @@ class CrateStockInController extends Controller
     }     
       
 
-    public function show($id, Request $request){
+    public function show($barcode, Request $request){
         try {
-            $details = Brand::with('glue', 'thickness', 'variant', 'grade')->find($id);
+            $details = Brand::with('glue', 'thickness', 'variant', 'grade')->find($barcode);
 
             return response()->json($details, 200);
 
@@ -57,9 +57,10 @@ class CrateStockInController extends Controller
     }
 
 
-    public function tempBatchStockIn($id, Request $request){
+    public function tempBatchStockIn($barcode, Request $request){
         try {
-            $scanned = BarcodeDetails::findOrFail($id);
+            $scanned = BarcodeDetails::where('barcode_number', $barcode)->first();
+
             $existing_record = TempBatchIn::where('barcode_id', $scanned->id)->first();
     
             // Initialize status with 'Success'

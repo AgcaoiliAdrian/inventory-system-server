@@ -9,7 +9,7 @@ class ScanBarcodeController extends Controller
 {
     public function show($id, Request $request){
         try {
-            $scanned = BarcodeDetails::with(['variant', 'brand'])->find($id);
+            $scanned = BarcodeDetails::with(['variant', 'brand', 'thickness', 'glue'])->find($id);
             
 
             if (!$scanned) return response()->json(['message' => 'Barcode scanned is invalid'], 401);
