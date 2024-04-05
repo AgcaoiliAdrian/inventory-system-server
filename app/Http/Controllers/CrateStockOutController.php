@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TempBatchOut;
 use App\Models\Crate;
+use App\Models\Panel;
 use App\Models\BarcodeDetails;
 
 class CrateStockOutController extends Controller
@@ -82,6 +83,8 @@ class CrateStockOutController extends Controller
     public function saveBatchStockOut(){
         try {
             $temp_batch_out = TempBatchOut::pluck('batch_number')->toArray();
+            $batch_number = Crate::where('barcode_id', $scanned->id)->pluck('batch_number')->first();
+
 
             // Update all Crates with matching batch numbers
             Crate::whereIn('batch_number', $temp_batch_out)
@@ -97,9 +100,28 @@ class CrateStockOutController extends Controller
         }
     }
 
-    public function insertOne(Request $request){
+    public function insertOne($barcode, Request $request){
         try {
-           
+            $scanned = BarcodeDetails::where('barcode_number', $barcode)->first();
+            $batch_number = Crate::where('id', $request->crate_stock_id)->pluck('batch_number')->first();
+            $panel = Panel::where('barcode_id', $scanned->id)->get();
+
+            foreach ($panel as $data) {
+                $crate = new Crate();
+                $crate -> barcode_id = $data -> barcode_id;
+                $crate -> quantity = $data -> quantity;
+                $crate -> manufacturing_date = $data -> manufacturing_date;
+                $crate -> batch_number =  $batch_number;
+                $crate -> status = 'out';
+                $crate -> save();
+
+                if($crate){
+                    Panel::where('id', $data->id)->delete();
+                }
+            }
+
+            return response()->json('Panel successfully inserted to crate', 200);
+
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }

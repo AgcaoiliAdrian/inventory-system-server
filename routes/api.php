@@ -73,6 +73,7 @@ Route::namespace('App\Http\Controllers')->group(function () {
         Route::post('/crate-out', 'CrateStockOutController@saveBatchStockOut'); //This API is for saving temporary batch stock-out
         Route::get('/crate-out-temp', 'CrateStockOutController@IndexTempBatchOut'); //Get all the temporary stock-out 
         Route::delete('/crate-out-temp/{id}', 'CrateStockOutController@delete'); //Get all the temporary stock-out 
+        Route::post('/insert-out/{barcode}', 'CrateStockOutController@insertOne'); //This API is for inserting one panel to the crate.
 
         //Panel Endpoint --- Stock In
         // Route::post('/panel/{id}', 'PanelStockInController@panelStockIn');

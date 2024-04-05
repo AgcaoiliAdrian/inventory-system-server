@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\BarcodeDetails;
 use App\Models\GlueType;
 use App\Models\Thickness;
-use App\Helpers\Helpers;
-
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -20,7 +19,7 @@ class GenerateStickerController extends Controller
         ]);
 
         $brandId = $request->brand_id;
-        
+
         $currentYear = date('Y');
         $currentMonth = date('m');
 
@@ -38,12 +37,16 @@ class GenerateStickerController extends Controller
             $series = (int)$latestSeries + 1;
         }
 
-        // Generate and assign barcode numbers within the loop
-        for ($i = 1; $i <= intval($request->quantity); $i++) {
-            // Format the series number with leading zeros
-            $formattedSeries = str_pad($series, 5, '0', STR_PAD_LEFT);
+        // Initialize a PHPWord object
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
-            // Concatenate the components to form the barcode number
+        // Create a single section for the Word document
+        $section = $phpWord->addSection(['colsNum' => 2]); // Set columns to 2
+
+        // Loop through each sticker to generate and attach barcode
+        for ($i = 1; $i <= intval($request->quantity); $i++) {
+            // Generate barcode number
+            $formattedSeries = str_pad($series, 5, '0', STR_PAD_LEFT);
             $barcode_number = $currentYear . $currentMonth . $formattedSeries;
 
             // Create barcode details with the generated barcode number
@@ -51,102 +54,100 @@ class GenerateStickerController extends Controller
                 'brand_id' => $request->brand_id,
                 'variant_id' => $request->variant_id,
                 'thickness_id' => $request->thickness_id,
-                'glue_type_id' => $request->glue_type_id,   
+                'glue_type_id' => $request->glue_type_id,
                 'barcode_number' => $barcode_number
             ]);
 
             // Increment the series number for the next iteration
             $series++;
 
-            // Generate barcode
+            // Generate barcode image
             $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
             $barcodeImage = $generator->getBarcode($barcode_number, $generator::TYPE_CODE_128, 10.9, 550);
-        }       
-    
-        // Get the image filename from the request
-        $imageFilename = $request->input('brand');
-    
-        // Construct the full path to the image based on the filename
-        $existingImagePath = public_path('/templates/' . $imageFilename . '.jpg'); // Append the jpg extension
-    
-        // Check if the image file exists
-        if (!file_exists($existingImagePath)) {
-            return response()->json(['error' => 'Image file not found.'], 404);
-        }
-    
-        // Load existing image
-        $existingImage = imagecreatefromjpeg($existingImagePath);
-    
-        // Load barcode image
-        $barcodeImageResource = imagecreatefromstring($barcodeImage);
-    
-        // Get dimensions
-        $barcodeWidth = imagesx($barcodeImageResource);
-        $barcodeHeight = imagesy($barcodeImageResource);
-    
-        // Calculate position to attach barcode
-        $x = 660; // Adjust as needed
-        $y = 2790; // Adjust as needed
-    
-       // Specify the path to your font file
-        $textFont = public_path('/fonts/impact.ttf');
 
-        $thickness = Thickness::select('value')->where('id', $request->thickness_id)->get();
-        $glue = GlueType::select('type')->where('id', $request->glue_type_id)->get();
+            // Get the image filename from the request
+            $imageFilename = $request->input('brand');
 
-        foreach($glue as $a){
-            $glue_type = $a->type;
-        }
+            // Construct the full path to the image based on the filename
+            $existingImagePath = public_path('/templates/' . $imageFilename . '.jpg'); // Append the jpg extension
 
-        foreach($thickness as $b){
-            $thickness_value = $b->value;
-        }
+            // Check if the image file exists
+            if (!file_exists($existingImagePath)) {
+                return response()->json(['error' => 'Image file not found.'], 404);
+            }
 
-        // Attach barcode to existing image
-        imagecopy($existingImage, $barcodeImageResource, $x, $y, 0, 0, $barcodeWidth, $barcodeHeight);
+            // Load existing image
+            $existingImage = imagecreatefromjpeg($existingImagePath);
 
-        // Define text contents
-        $text1 = "THICKNESS";
-        $text2 = "TYPE";
-        $text3 = $thickness_value . " MM";
-        $text4 = "TYPE " . $glue_type;
+            // Load barcode image
+            $barcodeImageResource = imagecreatefromstring($barcodeImage);
 
-        // Set font size for all texts
-        $font_size = 80; // Adjust font size here
+            // Get dimensions
+            $barcodeWidth = imagesx($barcodeImageResource);
+            $barcodeHeight = imagesy($barcodeImageResource);
 
-        // Set vertical spacing between texts
-        $vertical_spacing = 20;
+            // Calculate position to attach barcode
+            $x = 660; // Adjust as needed
+            $y = 2790; // Adjust as needed
 
-        // Add text below the barcode
-        $textColor = imagecolorallocate($existingImage, 0, 0, 0); // Black color
-        imagettftext($existingImage, $font_size, 0, 110, 2300 + $barcodeHeight + $vertical_spacing, $textColor, $textFont, $text1);
-        imagettftext($existingImage, $font_size, 0, 2050, 2300 + $barcodeHeight + 2 * $vertical_spacing, $textColor, $textFont, $text2);
-        imagettftext($existingImage, $font_size, 0, 180, 2750 + $barcodeHeight + 3 * $vertical_spacing, $textColor, $textFont, $text3);
-        imagettftext($existingImage, $font_size, 0, 2045, 2750 + $barcodeHeight + 4 * $vertical_spacing, $textColor, $textFont, $text4);
+            // Specify the path to your font file
+            $textFont = public_path('/fonts/impact.ttf');
 
-    
-        // Clean up
-        imagedestroy($barcodeImageResource);
-    
-        // Initialize a PHPWord object
-        $phpWord = new \PhpOffice\PhpWord\PhpWord();
-    
-        // Create a single section for the Word document
-        $section = $phpWord->addSection(['colsNum' => 2]); // Set columns to 2
-    
-        // Save the image with the barcode
-        $imagePathWithBarcode = tempnam(sys_get_temp_dir(), 'barcode_with_');
-        imagejpeg($existingImage, $imagePathWithBarcode);
-    
-        // Loop to add images to the section
-        for ($i = 1; $i <= intval($request->quantity); $i++) {
+            $thickness = Thickness::select('value')->where('id', $request->thickness_id)->get();
+            $glue = GlueType::select('type')->where('id', $request->glue_type_id)->get();
+
+            foreach($glue as $a){
+                $glue_type = $a->type;
+            }
+
+            foreach($thickness as $b){
+                $thickness_value = $b->value;
+            }
+
+            // Attach barcode to existing image
+            imagecopy($existingImage, $barcodeImageResource, $x, $y, 0, 0, imagesx($barcodeImageResource), imagesy($barcodeImageResource));
+
+            // Define text contents
+            $text1 = "THICKNESS";
+            $text2 = "TYPE";
+            $text3 = $thickness_value . " MM";
+            $text4 = "TYPE " . $glue_type;
+
+            // Set font size for all texts
+            $font_size = 80; // Adjust font size here
+
+            // Set vertical spacing between texts
+            $vertical_spacing = 20;
+
+            // Add text below the barcode
+            $textColor = imagecolorallocate($existingImage, 0, 0, 0); // Black color
+            imagettftext($existingImage, $font_size, 0, 110, 2300 + $barcodeHeight + $vertical_spacing, $textColor, $textFont, $text1);
+            imagettftext($existingImage, $font_size, 0, 2050, 2300 + $barcodeHeight + 2 * $vertical_spacing, $textColor, $textFont, $text2);
+            imagettftext($existingImage, $font_size, 0, 180, 2750 + $barcodeHeight + 3 * $vertical_spacing, $textColor, $textFont, $text3);
+            imagettftext($existingImage, $font_size, 0, 2045, 2750 + $barcodeHeight + 4 * $vertical_spacing, $textColor, $textFont, $text4);
+
+
+            // Save the sticker with barcode
+            $stickerPath = public_path('/stickers');
+            if (!is_dir($stickerPath)) {
+                mkdir($stickerPath, 0755, true);
+            }
+
+            // Save the sticker with a unique filename
+            $stickerFilename = $request->brand . '_' . $barcode_number . '.jpg';
+            imagejpeg($existingImage, $stickerPath . '/' . $stickerFilename);
+
             // Add the image with the barcode to the Word document
-            $section->addImage($imagePathWithBarcode, array(
+            $section->addImage($stickerPath . '/' . $stickerFilename, array(
                 'width' => 210, // 7cm converted to points (1 cm = 28.35 points)
                 'height' => 300, // 10cm converted to points (1 cm = 28.35 points)
             ));
+
+            // Clean up
+            imagedestroy($barcodeImageResource);
+            imagedestroy($existingImage);
         }
-    
+
         // Save the Word document with a unique filename
         $wordDocsPath = public_path('/word-docs');
         if (!is_dir($wordDocsPath)) {
@@ -155,13 +156,9 @@ class GenerateStickerController extends Controller
 
         $DATE = Carbon::now()->format('Y-m-d-h');
         $document = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-        $document->save($wordDocsPath . '/'.$request->brand.'-'. $DATE.'.docx');
-    
-        // Clean up
-        imagedestroy($existingImage);
-        unlink($imagePathWithBarcode);
-    
+        $document->save($wordDocsPath . '/' . $request->brand . '-' . $DATE . '.docx');
+
         // Return success message
-        return response("Barcode and Word document with images generated successfully.", 200);
+        return response("Barcode stickers and Word document generated successfully.", 200);
     }
 }
