@@ -94,9 +94,8 @@ Route::namespace('App\Http\Controllers')->group(function () {
         Route::get('/stock-out', 'StockOutController@index');
         Route::post('/stock-out/{id}', 'StockOutController@stockOut');
 
-        //Supplier End Points
-        Route::get('/materials', 'MaterialSuppliedController@index');
-        Route::post('/materials', 'MaterialSuppliedController@store');
+        //Batch Number End Points
+        Route::get('/batch', 'CrateStockInController@batchNumber');
     
         //Dashboard End Points
         Route::get('/stocks', 'DashboardController@stocksData'); // Get stocks data

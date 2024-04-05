@@ -32,8 +32,17 @@ class CrateStockInController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
-    }     
-      
+    }
+    
+    public function batchNumber(){
+        try {
+            $numbers = Crate::distinct()->pluck('batch_number');
+    
+            return response()->json(['batch_numbers' => $numbers], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }    
 
     public function show($barcode, Request $request){
         try {

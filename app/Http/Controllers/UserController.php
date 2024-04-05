@@ -138,4 +138,13 @@ class UserController extends Controller
         $user->password = Hash::make($newPassword);
         $user->save();
     }
+
+    public function index(){
+        try {
+            
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
+    }
+
 }
