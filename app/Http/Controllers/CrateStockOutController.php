@@ -83,8 +83,6 @@ class CrateStockOutController extends Controller
     public function saveBatchStockOut(){
         try {
             $temp_batch_out = TempBatchOut::pluck('batch_number')->toArray();
-            $batch_number = Crate::where('barcode_id', $scanned->id)->pluck('batch_number')->first();
-
 
             // Update all Crates with matching batch numbers
             Crate::whereIn('batch_number', $temp_batch_out)

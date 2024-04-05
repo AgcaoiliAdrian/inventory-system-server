@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use PhpOffice\PhpWord\Shared\Converter;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -101,29 +102,59 @@ class CrateStockInController extends Controller
 
     public function saveBatchStockIn(Request $request){
         try {
+
+            // Initialize a PHPWord object
+            $phpWord = new \PhpOffice\PhpWord\PhpWord();
             $batch_in = TempBatchIn::where('status', 'success')->get();
             
             // Generate batch number using the helper function and pass the encoding type
             $batch_number = Helpers::generateBatchNumber($request->encoding_type);
 
-
             foreach ($batch_in as $data){
                 $barcode = BarcodeDetails::findOrFail($data -> barcode_id);
+                
                 $barcode->update([
                     'grade_id' => $data->grade_id
                 ]);
     
                 $crate_stock = new CrateStock();
                 $crate_stock -> barcode_id = $data -> barcode_id;
-                // $crate_stock -> grade_id = $data -> grade_id;
                 $crate_stock -> quantity = 1;
                 $crate_stock -> manufacturing_date =  Carbon::now();
                 $crate_stock -> batch_number = $batch_number;
                 $crate_stock -> status = 'in';
                 $crate_stock->save();
 
-                if($crate_stock){
+                if ($crate_stock) {
                     TempBatchIn::truncate();
+    
+                    // Generate barcode image
+                    $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+                    $barcodeImage = $generator->getBarcode($barcode -> barcode_number, $generator::TYPE_CODE_128, 10.9, 550);
+    
+                    // Save the barcode image temporarily
+                    $barcodeImagePath = public_path('barcode.png');
+                    file_put_contents($barcodeImagePath, $barcodeImage);
+    
+                    // Add barcode image to the Word document
+                    $section = $phpWord->addSection();
+                    $section->addImage($barcodeImagePath, [
+                        'width' => 150, // 7cm converted to points (1 cm = 28.35 points)
+                        'height' => 80, // 10cm converted to points (1 cm = 28.35 points)        
+                    ]);
+    
+                    // Save the Word document with a unique filename
+                    $wordDocsPath = public_path('/Batch Barcode');
+                    if (!is_dir($wordDocsPath)) {
+                        mkdir($wordDocsPath, 0755, true);
+                    }
+    
+                    $documentPath = $wordDocsPath . '/' . $batch_number . '.docx';
+                    $document = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+                    $document->save($documentPath);
+    
+                    // Remove the temporary barcode image
+                    unlink($barcodeImagePath);
                 }
             }
         
