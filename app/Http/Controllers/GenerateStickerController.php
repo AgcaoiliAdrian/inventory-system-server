@@ -19,12 +19,23 @@ class GenerateStickerController extends Controller
         ]);
 
         $brandId = $request->brand_id;
-
+        
         $currentYear = date('Y');
         $currentMonth = date('m');
 
-        // Initialize $series variable
+        $latestBatch = BarcodeDetails::where('brand_id', $request->brand_id)
+            ->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->orderBy('created_at', 'desc')
+            ->orderBy('barcode_number', 'desc')
+            ->first();
+
         $series = 1;
+        if ($latestBatch) {
+            // Extract the series number from the latest batch number and increment it
+            $latestSeries = ($latestBatch->barcode_number)[2];
+            $series = (int)$latestSeries + 1;
+        }
 
         // Initialize a PHPWord object
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
