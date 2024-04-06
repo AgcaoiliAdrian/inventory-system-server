@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BarcodeDetails;
 use App\Models\GlueType;
 use App\Models\Thickness;
+use App\Models\Brand;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,9 @@ class GenerateStickerController extends Controller
         ]);
 
         $brandId = $request->brand_id;
-        
+        $brand_name = Brand::where('id', $brandId)->pluck('brand_name')->first();
+        $letters = substr($brand_name, -3);
+                
         $currentYear = date('Y');
         $currentMonth = date('m');
 
@@ -47,7 +50,7 @@ class GenerateStickerController extends Controller
         for ($i = 1; $i <= intval($request->quantity); $i++) {
             // Generate barcode number
             $formattedSeries = str_pad($series, 5, '0', STR_PAD_LEFT);
-            $barcode_number = $currentYear . $currentMonth . $formattedSeries;
+            $barcode_number = $currentYear . $currentMonth . $formattedSeries . $letters;
 
             // Create barcode details with the generated barcode number
             $details = BarcodeDetails::create([
@@ -63,7 +66,7 @@ class GenerateStickerController extends Controller
 
             // Generate barcode image
             $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-            $barcodeImage = $generator->getBarcode($barcode_number, $generator::TYPE_CODE_128, 10.9, 550);
+            $barcodeImage = $generator->getBarcode($barcode_number, $generator::TYPE_CODE_128, 8, 550);
 
             // Load existing image
             $existingImage = imagecreatefromjpeg(public_path('/templates/' . $request->input('brand') . '.jpg'));
@@ -76,7 +79,7 @@ class GenerateStickerController extends Controller
             $barcodeHeight = imagesy($barcodeImageResource);
 
             // Calculate position to attach barcode
-            $x = 660; // Adjust as needed
+            $x = 630; // Adjust as needed
             $y = 2790; // Adjust as needed
 
             // Specify the path to your font file
