@@ -23,19 +23,8 @@ class GenerateStickerController extends Controller
         $currentYear = date('Y');
         $currentMonth = date('m');
 
-        $latestBatch = BarcodeDetails::where('brand_id', $request->brand_id)
-            ->whereYear('created_at', $currentYear)
-            ->whereMonth('created_at', $currentMonth)
-            ->orderBy('created_at', 'desc')
-            ->orderBy('barcode_number', 'desc')
-            ->first();
-
+        // Initialize $series variable
         $series = 1;
-        if ($latestBatch) {
-            // Extract the series number from the latest batch number and increment it
-            $latestSeries = explode('-', $latestBatch->barcode_number)[2];
-            $series = (int)$latestSeries + 1;
-        }
 
         // Initialize a PHPWord object
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
@@ -65,19 +54,8 @@ class GenerateStickerController extends Controller
             $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
             $barcodeImage = $generator->getBarcode($barcode_number, $generator::TYPE_CODE_128, 10.9, 550);
 
-            // Get the image filename from the request
-            $imageFilename = $request->input('brand');
-
-            // Construct the full path to the image based on the filename
-            $existingImagePath = public_path('/templates/' . $imageFilename . '.jpg'); // Append the jpg extension
-
-            // Check if the image file exists
-            if (!file_exists($existingImagePath)) {
-                return response()->json(['error' => 'Image file not found.'], 404);
-            }
-
             // Load existing image
-            $existingImage = imagecreatefromjpeg($existingImagePath);
+            $existingImage = imagecreatefromjpeg(public_path('/templates/' . $request->input('brand') . '.jpg'));
 
             // Load barcode image
             $barcodeImageResource = imagecreatefromstring($barcodeImage);
@@ -126,19 +104,13 @@ class GenerateStickerController extends Controller
             imagettftext($existingImage, $font_size, 0, 180, 2750 + $barcodeHeight + 3 * $vertical_spacing, $textColor, $textFont, $text3);
             imagettftext($existingImage, $font_size, 0, 2045, 2750 + $barcodeHeight + 4 * $vertical_spacing, $textColor, $textFont, $text4);
 
-
-            // Save the sticker with barcode
-            $stickerPath = public_path('/stickers');
-            if (!is_dir($stickerPath)) {
-                mkdir($stickerPath, 0755, true);
-            }
-
-            // Save the sticker with a unique filename
-            $stickerFilename = $request->brand . '_' . $barcode_number . '.jpg';
-            imagejpeg($existingImage, $stickerPath . '/' . $stickerFilename);
+            // Convert image resource to string
+            ob_start();
+            imagejpeg($existingImage);
+            $imageContents = ob_get_clean();
 
             // Add the image with the barcode to the Word document
-            $section->addImage($stickerPath . '/' . $stickerFilename, array(
+            $section->addImage($imageContents, array(
                 'width' => 210, // 7cm converted to points (1 cm = 28.35 points)
                 'height' => 300, // 10cm converted to points (1 cm = 28.35 points)
             ));
