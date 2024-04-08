@@ -94,6 +94,7 @@ class CrateStockInController extends Controller
                     'barcode_id' => $scanned->id,
                     'brand_id' => $scanned->brand_id,
                     'grade_id' => $request->grade_id,
+                    'grader' => $request->grader,
                     'variant_id' => $scanned->variant_id,
                     'quantity' => 1,
                     'manufacturing_date' => now(),
@@ -129,6 +130,7 @@ class CrateStockInController extends Controller
                 $crate_stock = new CrateStock();
                 $crate_stock -> barcode_id = $data -> barcode_id;
                 $crate_stock -> quantity = 1;
+                $crate_stock -> grader = $data -> grader;
                 $crate_stock -> manufacturing_date =  Carbon::now();
                 $crate_stock -> batch_number = $batch_number;
                 $crate_stock -> status = 'in';

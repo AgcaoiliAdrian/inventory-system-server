@@ -57,7 +57,7 @@ Route::namespace('App\Http\Controllers')->group(function () {
         Route::put('/product/{id}', 'ProductController@update');
 
         //Scanned Barcode Data Endpoint
-        Route::get('/scanned/{id}', 'ScanBarcodeController@show');
+        Route::get('/scanned/{barcode}', 'ScanBarcodeController@show');
 
         //Crate Endpoint --- Stock-In
         Route::get('/crate-in', 'CrateStockInController@index');
@@ -94,7 +94,7 @@ Route::namespace('App\Http\Controllers')->group(function () {
         Route::get('/stock-out', 'StockOutController@index');
         Route::post('/stock-out/{id}', 'StockOutController@stockOut');
 
-        //Batch Number End Points
+        //List of Batch Number End Points
         Route::get('/batch', 'CrateStockInController@batchNumber');
 
         //List of Crates with details

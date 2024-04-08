@@ -17,5 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([GlueTypeSeeder::class]);
         $this->call([ThicknessSeeder::class]);
         $this->call([ProductSeeder::class]);
+        $this->call([UserSeeder::class]);
+        $this->call([UserInfoSeeder::class]);
     }
 }

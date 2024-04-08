@@ -59,6 +59,7 @@ class PanelStockInController extends Controller
             $panel_stock = new Panel();
             $panel_stock -> barcode_id = $barcode -> id;
             $panel_stock -> grade_id = $request -> grade_id;
+            $panel_stock -> grader = $request -> grader;
             $panel_stock -> manufacturing_date = Carbon::now();
             $panel_stock -> quantity = 1;
             $panel_stock -> price = $request -> price;
@@ -76,6 +77,8 @@ class PanelStockInController extends Controller
         try {
             $temp_panel = TempPanelIn::where('status', 'success')->get();
 
+            // return $temp_panel;
+
             foreach($temp_panel as $data){
                 $barcode = BarcodeDetails::findOrFail($data -> barcode_id);
                 $barcode->update([
@@ -85,6 +88,7 @@ class PanelStockInController extends Controller
                 $panel = new Panel();
                 $panel -> barcode_id = $data -> barcode_id;
                 $panel -> quantity = 1;
+                $panel -> grader = $data -> grader;
                 $panel -> manufacturing_date = Carbon::now();
                 $panel -> status = 'in';
                 $panel -> save();
@@ -107,7 +111,7 @@ class PanelStockInController extends Controller
         try {
             
             $scanned = BarcodeDetails::where('barcode_number', $barcode)->first();
-            $previous_data = TempPanelIn::first();
+            $existing_record = TempPanelIn::where('barcode_id', $scanned->id)->first();
 
             // Initialize status with 'Success'
             $status = 'success';
@@ -117,18 +121,25 @@ class PanelStockInController extends Controller
             //     // If not the same, set status to 'Failed'
             //     $status = 'failed';
             // }
-    
-            // Save the new data with the determined status
-            $panel = TempPanelIn::create([
-                'barcode_id' => $scanned->id,
-                'brand_id' => $scanned->brand_id,
-                'grade_id' => $request->grade_id,
-                'variant_id' => $scanned->variant_id,
-                'quantity' => 1,
-                'price' => $request->price,
-                'manufacturing_date' => now(),
-                'status' => $status
-            ]);
+
+            if($existing_record) {
+                return response()->json(['message'=>'Barcode already scanned'], 201);
+            }else {
+                $previous_data = TempPanelIn::first();
+
+                // Save the new data with the determined status
+                $panel = TempPanelIn::create([
+                    'barcode_id' => $scanned->id,
+                    'brand_id' => $scanned->brand_id,
+                    'grade_id' => $request->grade_id,
+                    'grader' => $request -> grader,
+                    'variant_id' => $scanned->variant_id,
+                    'quantity' => 1,
+                    'price' => $request->price,
+                    'manufacturing_date' => now(),
+                    'status' => $status
+                ]);
+            }
     
             return response()->json(['message' => 'Success']);
     

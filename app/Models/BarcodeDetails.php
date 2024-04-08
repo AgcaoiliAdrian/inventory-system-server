@@ -64,5 +64,4 @@ class BarcodeDetails extends Model
     {
         return $this->hasMany(Panel::class, 'barcode_id');
     }    
-    
 }

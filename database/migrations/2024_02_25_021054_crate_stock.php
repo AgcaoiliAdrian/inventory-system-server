@@ -19,6 +19,7 @@ class CrateStock extends Migration
             $table->integer('quantity');
             $table->date('manufacturing_date');
             $table->string('batch_number')->nullable();
+            $table->string('grader');
             $table->string('status')->nullable();
 
             $table->timestamps();

@@ -18,6 +18,7 @@ class PanelStock extends Migration
             $table->unsignedInteger('barcode_id')->nullable();
             $table->integer('quantity');
             $table->date('manufacturing_date');
+            $table->string('grader');
             $table->string('status');
             
             $table->timestamps();

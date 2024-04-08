@@ -13,8 +13,8 @@ class Crate extends Model
 
     public $fillable = [
         'barcode_id',
-        'grade_id',
         'manufacturing_date',
+        'grader',
         'quantity',
         'batch_number'
     ];

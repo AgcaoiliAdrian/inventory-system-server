@@ -16,12 +16,21 @@ class GenerateStickerController extends Controller
         // Validate request data
         $request->validate([
             'brand' => 'required|string',
+            'variant' => 'nullable|string',
             'quantity' => 'required|string',
         ]);
 
         $brandId = $request->brand_id;
+        $variantId = $request->variant_id;
+    
         $brand_name = Brand::where('id', $brandId)->pluck('brand_name')->first();
-        $letters = substr($brand_name, -3);
+
+        // Calculate the starting index of the middle letters
+        $middle_start = floor(strlen($brand_name) / 2) - 1;
+
+        // Extract the 3 middle letters
+        $letters = substr($brand_name, $middle_start, 3);
+
                 
         $currentYear = date('Y');
         $currentMonth = date('m');
@@ -69,7 +78,11 @@ class GenerateStickerController extends Controller
             $barcodeImage = $generator->getBarcode($barcode_number, $generator::TYPE_CODE_128, 8, 550);
 
             // Load existing image
-            $existingImage = imagecreatefromjpeg(public_path('/templates/' . $request->input('brand') . '.jpg'));
+            if($request->variant != null){
+                $existingImage = imagecreatefromjpeg(public_path('/templates/' . $request->input('brand') . '-' . $request->input('variant'). '.jpg'));
+            }else{
+                $existingImage = imagecreatefromjpeg(public_path('/templates/' . $request->input('brand'). '.jpg'));
+            }
 
             // Load barcode image
             $barcodeImageResource = imagecreatefromstring($barcodeImage);
@@ -125,8 +138,8 @@ class GenerateStickerController extends Controller
 
             // Add the image with the barcode to the Word document
             $section->addImage($imageContents, array(
-                'width' => 210, // 7cm converted to points (1 cm = 28.35 points)
-                'height' => 300, // 10cm converted to points (1 cm = 28.35 points)
+                'width' => 198.45, // 7cm converted to points (1 cm = 28.35 points)
+                'height' => 288, // 10cm converted to points (1 cm = 28.35 points)
             ));
 
             // Clean up

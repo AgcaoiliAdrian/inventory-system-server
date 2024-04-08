@@ -19,6 +19,7 @@ class TempPanelIn extends Model
         'grade_id',
         'brand_id',
         'variant_id',
+        'grader',
         'manufacturing_date',
         'quantity',
         'status'
