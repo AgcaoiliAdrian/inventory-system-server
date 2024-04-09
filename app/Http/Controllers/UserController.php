@@ -141,6 +141,9 @@ class UserController extends Controller
 
     public function index(){
         try {
+            $users = User::with('info')->get();
+
+            return response()->json($users, 200);
             
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);

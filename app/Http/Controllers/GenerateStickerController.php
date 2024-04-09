@@ -42,12 +42,12 @@ class GenerateStickerController extends Controller
             ->orderBy('barcode_number', 'desc')
             ->first();
 
-        $series = 1;
-        if ($latestBatch) {
-            // Extract the series number from the latest batch number and increment it
-            $latestSeries = ($latestBatch->barcode_number)[2];
-            $series = (int)$latestSeries + 1;
-        }
+            $series = 1;
+            if ($latestBatch) {
+                // Extract the numerical part of the latest batch number and increment it
+                $latestBatchNumber = (int)substr($latestBatch->barcode_number, -4);
+                $series = $latestBatchNumber + 1;
+            }            
 
         // Initialize a PHPWord object
         $phpWord = new \PhpOffice\PhpWord\PhpWord();

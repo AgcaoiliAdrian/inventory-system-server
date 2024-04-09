@@ -97,6 +97,9 @@ Route::namespace('App\Http\Controllers')->group(function () {
         //List of Batch Number End Points
         Route::get('/batch', 'CrateStockInController@batchNumber');
 
+        //List of Users
+        Route::get('/users', 'UserController@index');
+
         //List of Crates with details
         Route::get('/crate-details', 'DataTableController@index');
     
