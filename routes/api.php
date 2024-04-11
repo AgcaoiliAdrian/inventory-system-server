@@ -111,6 +111,9 @@ Route::namespace('App\Http\Controllers')->group(function () {
 
         //Generate Sticker
         Route::post('/generate', 'GenerateStickerController@generate');
+
+        //Generate Reports
+        Route::get('/report', 'GenerateReportController@generate'); //sticker usage data
         
     // });
 
