@@ -24,7 +24,7 @@ class GenerateReportExport implements FromCollection, WithHeadings, WithColumnFo
     public function collection()
     {
         $formattedData = [];
-
+    
         foreach ($this->data as $item) {
             $formattedData[] = [
                 'Brand Name' => $item->brand->brand_name,
@@ -35,12 +35,21 @@ class GenerateReportExport implements FromCollection, WithHeadings, WithColumnFo
                 'Grader' => $item->grader,
                 'Barcode No.' => $item->barcode_number,
                 'Manufacturing Date' => date('F j, Y', strtotime($item->manufacturing_date)),
-                'Stock-in' => $item->stockIn,
+                'Stock-in' => $item->stockIn ? $item->stockIn : '0',
                 'Stock-out' => $item->stockOut ? $item->stockOut : '0',
                 '' => '',
             ];
         }
-
+    
+        // Calculate totals
+        $totalStockIn = 0;
+        $totalStockOut = 0;
+        foreach ($this->data as $item) {
+            $totalStockIn += $item->totalStockIn;
+            $totalStockOut += $item->totalStockOut;
+        }
+    
+        // Add total row
         $formattedData[] = [
             'Brand Name' => '',
             'Variant' => '',
@@ -49,11 +58,14 @@ class GenerateReportExport implements FromCollection, WithHeadings, WithColumnFo
             'Grade' => '',
             'Grader' => '',
             'Barcode No.' => '',
-            'Manufacturing' => 'TOTAL'
+            'Manufacturing Date' => 'TOTAL',
+            'Stock-in' => $totalStockIn,
+            'Stock-out' => $totalStockOut,
+            '' => '',
         ];
-
+    
         return collect($formattedData);
-    }
+    }    
 
     public function headings(): array
     {

@@ -118,7 +118,7 @@ Route::namespace('App\Http\Controllers')->group(function () {
     // });
 
     // Catch-all route for unauthorized requests
-    Route::fallback(function () {
-        return response()->json(['message' => 'Unauthorized.'], 401);
-    });
+    // Route::fallback(function () {
+    //     return response()->json(['message' => 'Unauthorized.'], 401);
+    // });
 });

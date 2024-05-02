@@ -7,7 +7,9 @@ use App\Models\GlueType;
 use App\Models\Thickness;
 use App\Models\Brand;
 use Carbon\Carbon;
+use PhpOffice\PhpWord\IOFactory;
 use Illuminate\Http\Request;
+
 
 class GenerateStickerController extends Controller
 {
@@ -155,11 +157,17 @@ class GenerateStickerController extends Controller
             }
 
             $DATE = Carbon::now()->format('Y-m-d-h');
-            $document = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-            $document->save($wordDocsPath . '/' . $request->brand . '-' . $DATE . '.docx');
-
-            // Return success message
-            return response("Barcode stickers and Word document generated successfully.", 200);
+            $document = IOFactory::createWriter($phpWord, 'Word2007');
+            $wordFileName = $request->brand . '-' . $DATE . '.docx';
+            $wordFilePath = $wordDocsPath . '/' . $wordFileName;
+            $document->save($wordFilePath);
+            
+            // Set headers for file download
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . $wordFileName . '"');
+            
+            // Output the response
+            echo "Barcode stickers and Word document generated successfully.";
             
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);
